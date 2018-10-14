@@ -1,34 +1,23 @@
-package Server;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import org.bson.BSON;
-import org.bson.Document;
+package server;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class Server {
     public static void main(String[] args) {
         int port = 666; //random port number
-        List clients = new ArrayList<DataOutputStream>(); //liste des clients connectés
-
+/*
         MongoClient mongo = new MongoClient("localhost",27017);
         MongoDatabase JIRC = mongo.getDatabase("JIRC");
         MongoCollection logsCollection =JIRC.getCollection("logs");
         Document message = new Document();
         message.put("Sec", "second message");
         logsCollection.insertOne(message);
-
+*/
 
 
         try {
@@ -39,7 +28,6 @@ public class Server {
                 Socket socket = ss.accept();//La connexion est faite entre le client (port random) et le serveur (port 666)
 
                 //On ajoute le client dans la liste des clients connectés.
-                clients.add(new DataOutputStream(socket.getOutputStream()));
                 //On crée un thread par client
                 SSocket sSocket = new SSocket(socket);
                 Thread t = new Thread(sSocket);
@@ -52,9 +40,16 @@ public class Server {
 
 class SSocket implements Runnable {
     private Socket socket;
+    private static List<DataOutputStream> listeClients = new ArrayList<DataOutputStream>(); //liste des clients connectés
 
-    public SSocket(Socket socket) {
+    public SSocket(Socket socket) throws IOException {
         this.socket = socket;
+        try{
+            listeClients.add(new DataOutputStream(socket.getOutputStream()));
+        }
+        catch(IOException e){
+            throw new IOException(e.getMessage());
+        }
     }
 
     @Override
@@ -73,9 +68,13 @@ class SSocket implements Runnable {
                 //Les données sont reçu en utf-16
                 line = dIn.readUTF();
                 System.out.println("Received from " + socket.getRemoteSocketAddress() + " : " + line);
-                dOut.writeUTF(line + " Comming back from the server");
-                dOut.flush();
+                //dOut.writeUTF(line + " Comming back from the server");
+                //dOut.flush();
                 System.out.println("waiting for the next line....");
+                for(DataOutputStream client : listeClients){
+                    client.writeUTF(line + " Comming back from the server");
+                    client.flush();
+                }
             }
         }
         catch (Exception e) { }
