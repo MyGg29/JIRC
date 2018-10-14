@@ -1,9 +1,4 @@
-@CHARSET "US-ASCII";
-
 .tab-header-area {
-    -fx-padding: 0 0 0 50 ;
-    -fx-border-color: red;
 }
-.tab-header-background {
-    -fx-background-color: red;
+.tab-pane > .tab-header-area > .header-region {
 }
