@@ -1,4 +1,4 @@
-package client;
+package models;
 
 @FunctionalInterface
 public interface Function<One, Two, Three, Four> {

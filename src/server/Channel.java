@@ -1,8 +1,8 @@
 package server;
 
-import java.io.DataOutputStream;
+import models.TypeChannel;
+
 import java.io.IOException;
-import java.net.SocketAddress;
 import java.util.*;
 
 public class Channel {

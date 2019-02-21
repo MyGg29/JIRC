@@ -1,30 +1,33 @@
-package client;
+package client.controllers;
 
+import models.Client;
 import javafx.application.Platform;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.Pair;
-import org.bson.Document;
 
 import java.util.Date;
 import java.util.Optional;
 
 
-public class Controller {
+public class MainController {
     @FXML
     private TextField textInput;
     @FXML
     private Button send;
     @FXML
     private TabPane tabs;
-
+    @FXML
     private Client client;
 
-    public Controller(){
+    public MainController(){
         client = new Client();
     }
     public void initialize(){
@@ -79,6 +82,18 @@ public class Controller {
             tabs.getSelectionModel().getSelectedItem().getContent().setOnMouseClicked(null);//on veux pouvoir faire ca qu'une fois
             client.joinChannel(invitation.get());
         }
+    }
+
+    @FXML
+    private void showChannelParameters(ActionEvent event){
+        try{
+            Parent root = FXMLLoader.load(getClass().getResource("../views/ChannelParameters.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Channel Parameters");
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(Exception e){}
     }
 
     @FXML

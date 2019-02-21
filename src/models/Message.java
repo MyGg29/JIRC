@@ -3,6 +3,7 @@ package models;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+//useless for now
 public class Message extends Document {
     private String type;
     private String content;

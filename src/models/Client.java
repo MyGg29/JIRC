@@ -1,18 +1,16 @@
-package client;
+package models;
 
 import org.bson.Document;
-import server.Channel;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.function.Function;
 
 public class Client{
     DataInputStream dIn;
     DataOutputStream dOut;
     int serverPort = 666;
-    client.Function<String,String,String, Void> showMessage;
+    Function<String,String,String, Void> showMessage;
     public Client(){
         try {
             InetAddress inetAdd = InetAddress.getByName("127.0.0.1");
@@ -70,7 +68,7 @@ public class Client{
         }
     }
     //Permet de donner à la classe un comportement exterieur quand un message arrive sur le stream
-    public void setShowMessage(client.Function<String,String,String,Void> showMessageFunction){
+    public void setShowMessage(Function<String,String,String,Void> showMessageFunction){
         this.showMessage = showMessageFunction;
 
     }
