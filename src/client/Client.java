@@ -1,15 +1,11 @@
 package client;
 
-import com.mongodb.client.model.Filters;
-import com.mongodb.util.ObjectSerializer;
-import netscape.javascript.JSObject;
-import org.bson.BSON;
 import org.bson.Document;
+import server.Channel;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.concurrent.Callable;
 import java.util.function.Function;
 
 public class Client{
@@ -28,35 +24,33 @@ public class Client{
             dIn = new DataInputStream(in);
             dOut = new DataOutputStream(out);
 
-            //BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
-
-            //System.out.println("Type in something and press enter. Will send it to the server and tell ya what it thinks.");
-            //System.out.println();
-
-            //String line = null;
-            //while (true) {
-            //line = keyboard.readLine();
-            //    System.out.println("Wrinting Something on the server");
-            //    dOut.writeUTF(line);
-            //    dOut.flush();
-
-            //    line = dIn.readUTF();
-            //    System.out.println("Line Sent back by the server---" + line);
-            //}
             Thread listen = new Thread(this::listen); //créer un thread qui va faire tourner listen()
             listen.start();
-
-
         }
         catch (Exception e) { }
     }
-    public void sendText(String s) {
+
+    public void joinChannel(String channelName){
+        Document d = new Document();
+        d.put("Join", channelName);
+        send(d.toJson());
+    }
+
+    private void send(String text){
         try{
-            dOut.writeUTF(s);
-            dOut.flush();
+        dOut.writeUTF(text);
+        dOut.flush();
         }catch(IOException e){}
     }
 
+    public void sendMessage(String message, String channel) {
+       Document d = new Document();
+       d.put("Channel", channel);
+       d.put("Message", message);
+       send(d.toJson());
+    }
+
+    // Used to show the message on the screen. The client is always listenning for a server response and show it when it sees something
     public void listen(){
         try{
             while(true){

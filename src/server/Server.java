@@ -67,18 +67,19 @@ class SSocket implements Runnable {
 
                 //Si on veux join un channel
                 if(messageRecu.containsKey("Join")){
-                    if(Channel.everyChannels.containsKey("Main")){
-                        Channel.everyChannels.get("Main").userList.add(userData);
+                    String nomChannel = messageRecu.get("Join",String.class);
+                    if(Channel.everyChannels.containsKey(nomChannel)){
+                        Channel.everyChannels.get(nomChannel).userList.add(userData);
                     }
                     else{
                         Channel mainChannel = new Channel();
-                        mainChannel.name = "Main";
+                        mainChannel.name = nomChannel;
                         mainChannel.type = TypeChannel.PUBLIC;
-                        Channel.everyChannels.put("Main", mainChannel);
-                        Channel.everyChannels.get("Main").userList.add(userData);
+                        Channel.everyChannels.put(nomChannel, mainChannel);
+                        Channel.everyChannels.get(nomChannel).userList.add(userData);
                     }
                 }
-                else{
+                if(messageRecu.containsKey("Message")){
                     //On trouve le channel ou envoyer le message
                     for(Map.Entry<String, Channel> entry : Channel.everyChannels.entrySet()){
                         String key = entry.getKey();
