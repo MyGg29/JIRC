@@ -2,3 +2,7 @@
 }
 .tab-pane > .tab-header-area > .header-region {
 }
+
+.text-area {
+    -fx-prompt-text-fill: red;
+}

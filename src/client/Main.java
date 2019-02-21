@@ -16,15 +16,22 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        final Parent root = FXMLLoader.load(getClass().getResource("Client.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Client.fxml"));
+        final Parent root = loader.load();
         primaryStage.setTitle("Hello World");
         Scene scene = new Scene(root, 300, 275);
-        scene.getStylesheets().add(getClass().getResource("tabs.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
         primaryStage.setScene(scene);
-        primaryStage.show();
 
+        Controller controller = loader.getController();
+        primaryStage.setOnCloseRequest(controller::shutdown);
+        primaryStage.show();
     }
 
+    @Override
+    public void stop(){
+        System.out.println("stoping...");
+    }
 
     public static void main(String[] args) {
         launch(args);

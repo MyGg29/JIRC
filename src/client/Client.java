@@ -1,15 +1,23 @@
 package client;
 
+import com.mongodb.client.model.Filters;
+import com.mongodb.util.ObjectSerializer;
+import netscape.javascript.JSObject;
+import org.bson.BSON;
+import org.bson.Document;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.concurrent.Callable;
+import java.util.function.Function;
 
-public class Client {
+public class Client{
     DataInputStream dIn;
     DataOutputStream dOut;
     int serverPort = 666;
-
-    public Client() {
+    Function<String, Void> showMessage;
+    public Client(){
         try {
             InetAddress inetAdd = InetAddress.getByName("127.0.0.1");
             Socket socket = new Socket(inetAdd, serverPort);//Ouvre un socket sur localhost
@@ -35,9 +43,9 @@ public class Client {
             //    line = dIn.readUTF();
             //    System.out.println("Line Sent back by the server---" + line);
             //}
-            DInListenner listenner = new DInListenner(dIn);
-            Thread listen = new Thread(listenner);
+            Thread listen = new Thread(this::listen); //créer un thread qui va faire tourner listen()
             listen.start();
+
 
         }
         catch (Exception e) { }
@@ -48,23 +56,29 @@ public class Client {
             dOut.flush();
         }catch(IOException e){}
     }
-}
 
-class DInListenner implements Runnable {
-    private DataInputStream dIn;
-    public DInListenner(DataInputStream dIn){
-       this.dIn = dIn;
-    }
-    @Override
-    public void run(){
+    public void listen(){
         try{
             while(true){
                 String line = dIn.readUTF();
                 System.out.println("Line Sent back by the server---" + line);
+                Document messageRecu = Document.parse(line);
+
+                showMessage.apply(messageRecu.get("Sender", String.class) + ": " + messageRecu.get("Message", String.class));
             }
         }
         catch (IOException e){
-
+            e.printStackTrace();
         }
     }
+    //Permet de donner à la classe un comportement exterieur quand un message arrive sur le stream
+    public void setShowMessage(Function<String, Void> showMessageFunction){
+        this.showMessage = showMessageFunction;
+    }
+
+    public void shutdown(){
+
+    }
+
 }
+
