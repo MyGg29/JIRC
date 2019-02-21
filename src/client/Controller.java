@@ -7,8 +7,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
+import javafx.util.Pair;
 import org.bson.Document;
 
+import java.util.Date;
 import java.util.Optional;
 
 
@@ -31,13 +33,12 @@ public class Controller {
     }
 
     //method to tell the client how we'll write in the textbox, used by the client who's listenning.
-    public Void showText(String s){
+    public Void showText(String channel, String sender, String content){
         //On append pour le tab ouverte mais aussi toutes les tabs ouvertes
         //      -> On peux avoir plusieurs tabs lié au même chan ouvertes en même temps
-        String nameOfTheOpenedTab = tabs.getSelectionModel().getSelectedItem().getText();
-        FilteredList<Tab> similarTabs = tabs.getTabs().filtered((e) -> e.getText().equals(nameOfTheOpenedTab));
+        FilteredList<Tab> similarTabs = tabs.getTabs().filtered(e -> e.getText().equals(channel));
         similarTabs.forEach(tab ->
-                ((TextArea)tab.getContent()).appendText(s + "\n")
+                ((TextArea)tab.getContent()).appendText(new Date().toLocaleString() + " / " + sender + " : " + content + "\n")
         );
         return null;
     }

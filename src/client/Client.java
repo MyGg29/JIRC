@@ -12,7 +12,7 @@ public class Client{
     DataInputStream dIn;
     DataOutputStream dOut;
     int serverPort = 666;
-    Function<String, Void> showMessage;
+    client.Function<String,String,String, Void> showMessage;
     public Client(){
         try {
             InetAddress inetAdd = InetAddress.getByName("127.0.0.1");
@@ -32,7 +32,8 @@ public class Client{
 
     public void joinChannel(String channelName){
         Document d = new Document();
-        d.put("Join", channelName);
+        d.put("Type", "Join");
+        d.put("Channel", channelName);
         send(d.toJson());
     }
 
@@ -45,8 +46,9 @@ public class Client{
 
     public void sendMessage(String message, String channel) {
        Document d = new Document();
+       d.put("Type", "Message");
        d.put("Channel", channel);
-       d.put("Message", message);
+       d.put("Content", message);
        send(d.toJson());
     }
 
@@ -58,7 +60,9 @@ public class Client{
                 System.out.println("Line Sent back by the server---" + line);
                 Document messageRecu = Document.parse(line);
 
-                showMessage.apply(messageRecu.get("Sender", String.class) + ": " + messageRecu.get("Message", String.class));
+                showMessage.apply(messageRecu.get("Channel",String.class),
+                                messageRecu.get("Sender", String.class),
+                                messageRecu.get("Content", String.class));
             }
         }
         catch (IOException e){
@@ -66,8 +70,9 @@ public class Client{
         }
     }
     //Permet de donner à la classe un comportement exterieur quand un message arrive sur le stream
-    public void setShowMessage(Function<String, Void> showMessageFunction){
+    public void setShowMessage(client.Function<String,String,String,Void> showMessageFunction){
         this.showMessage = showMessageFunction;
+
     }
 
     public void shutdown(){

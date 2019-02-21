@@ -65,9 +65,9 @@ class SSocket implements Runnable {
                 Document messageRecu = Document.parse(line);
                 messageRecu.put("Sender", userData.getName());
 
-                //Si on veux join un channel
-                if(messageRecu.containsKey("Join")){
-                    String nomChannel = messageRecu.get("Join",String.class);
+                if(messageRecu.get("Type").equals("Join")){
+                    //Si on veux join un channel
+                    String nomChannel = messageRecu.get("Channel",String.class);
                     if(Channel.everyChannels.containsKey(nomChannel)){
                         Channel.everyChannels.get(nomChannel).userList.add(userData);
                     }
@@ -79,13 +79,13 @@ class SSocket implements Runnable {
                         Channel.everyChannels.get(nomChannel).userList.add(userData);
                     }
                 }
-                if(messageRecu.containsKey("Message")){
+                if(messageRecu.get("Type").equals("Message")){
                     //On trouve le channel ou envoyer le message
-                    for(Map.Entry<String, Channel> entry : Channel.everyChannels.entrySet()){
-                        String key = entry.getKey();
-                        Channel value = entry.getValue();
-                        if(key.equals(messageRecu.get("Channel", String.class))){
-                            value.sendToChannel(messageRecu.toJson());
+                    for(Map.Entry<String, Channel> channel : Channel.everyChannels.entrySet()){
+                        String nomChannel =  channel.getKey();
+                        Channel objectChannel =  channel.getValue();
+                        if(messageRecu.get("Channel").equals(nomChannel)){
+                            objectChannel.sendToChannel(messageRecu.toJson());
                         }
                     }
                 }
