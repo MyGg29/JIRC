@@ -2,6 +2,7 @@ package server;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,11 @@ public class User {
 
     public List<Channel> getChannels() {
         return channels;
+    }
+
+    public void send(String data) throws IOException {
+        outputStream.writeUTF(data);
+        outputStream.flush();
     }
 
     public void setChannels(List<Channel> channels) {

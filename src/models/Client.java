@@ -1,16 +1,22 @@
 package models;
 
+import org.bson.BsonType;
 import org.bson.Document;
+import server.Channel;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class Client{
-    DataInputStream dIn;
-    DataOutputStream dOut;
-    int serverPort = 666;
-    Function<String,String,String, Void> showMessage;
+    private volatile boolean exitListenThread = false;
+    private DataInputStream dIn;
+    private DataOutputStream dOut;
+    private int serverPort = 666;
+    private Function<String,String,String, Void> showMessage;
+
     public Client(){
         try {
             InetAddress inetAdd = InetAddress.getByName("127.0.0.1");
@@ -28,11 +34,43 @@ public class Client{
         catch (Exception e) { }
     }
 
-    public void joinChannel(String channelName){
+    public void joinChannel(String channelName, TypesChannel typeChannel){
         Document d = new Document();
-        d.put("Type", "Join");
+        d.put("Type", "JOIN");
+        d.put("Channel", channelName);
+        d.put("TypeChannel",typeChannel.toString());
+        send(d.toJson());
+    }
+
+    public void getChannelInfo(String channelName){ Document d = new Document();
+        d.put("Type", "INFO");
         d.put("Channel", channelName);
         send(d.toJson());
+    }
+    // Used to show the message on the screen. The client is always listenning for a server response and show it when it sees something
+    public void listen(){
+        while(!exitListenThread){
+            try{
+                String line = dIn.readUTF();
+                System.out.println("Line Sent back by the server---" + line);
+                Document messageRecu = Document.parse(line);
+
+                if(messageRecu.get("Type").equals("MESSAGE")){
+                    showMessage.apply(messageRecu.get("Channel",String.class),
+                            messageRecu.get("Sender", String.class),
+                            messageRecu.get("Content", String.class));
+                }
+                if(messageRecu.get("Type").equals("INFO")){
+
+                }
+            } catch (SocketException e){
+                e.printStackTrace();
+                System.out.println("Closing listenning thread...");
+                exitListenThread = true;
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
     }
 
     private void send(String text){
@@ -44,38 +82,35 @@ public class Client{
 
     public void sendMessage(String message, String channel) {
        Document d = new Document();
-       d.put("Type", "Message");
+       d.put("Type", "MESSAGE");
        d.put("Channel", channel);
        d.put("Content", message);
        send(d.toJson());
     }
 
-    // Used to show the message on the screen. The client is always listenning for a server response and show it when it sees something
-    public void listen(){
-        try{
-            while(true){
-                String line = dIn.readUTF();
-                System.out.println("Line Sent back by the server---" + line);
-                Document messageRecu = Document.parse(line);
-
-                showMessage.apply(messageRecu.get("Channel",String.class),
-                                messageRecu.get("Sender", String.class),
-                                messageRecu.get("Content", String.class));
-            }
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-    }
     //Permet de donner à la classe un comportement exterieur quand un message arrive sur le stream
     public void setShowMessage(Function<String,String,String,Void> showMessageFunction){
         this.showMessage = showMessageFunction;
-
     }
 
     public void shutdown(){
+        try{
+            dIn.close();
+            dOut.close();
+        }
+        catch (IOException e){
+            System.out.println("Problem closing the server socket");
+        }
+        finally {
 
+        }
     }
 
 }
 
+class ListenTheServer implements Runnable {
+
+    @Override
+    public void run() {
+    }
+}

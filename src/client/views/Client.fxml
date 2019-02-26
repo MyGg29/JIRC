@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controllers.MainController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controllers.MainController">
          <children>
             <GridPane alignment="CENTER" layoutX="14.0" layoutY="478.0" prefHeight="62.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
               <columnConstraints>
@@ -50,7 +50,7 @@
                        <tabs>
                            <Tab text="Main">
                                <content>
-                                   <TextArea fx:id="chatBox1" editable="false" onMouseClicked="#showJoinChannel" promptText="Click to add a channel" />
+                                   <TextArea fx:id="chatBox1" editable="false" />
                                </content>
                            </Tab>
                            <Tab onSelectionChanged="#addTab" text="+">

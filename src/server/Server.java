@@ -1,6 +1,7 @@
 package server;
 
-import models.TypeChannel;
+import models.TypesChannel;
+import models.TypesMessage;
 import org.bson.Document;
 
 import java.io.*;
@@ -65,29 +66,38 @@ class SSocket implements Runnable {
                 Document messageRecu = Document.parse(line);
                 messageRecu.put("Sender", userData.getName());
 
-                if(messageRecu.get("Type").equals("Join")){
+                if(messageRecu.get("Type").equals("JOIN")){
                     //Si on veux join un channel
                     String nomChannel = messageRecu.get("Channel",String.class);
                     if(Channel.everyChannels.containsKey(nomChannel)){
-                        Channel.everyChannels.get(nomChannel).userList.add(userData);
+                        if(Channel.everyChannels.get(nomChannel).isAllowedToJoin(userData)){
+                            Channel.everyChannels.get(nomChannel).getUserList().add(userData);
+                            userData.getChannels().add(Channel.everyChannels.get(nomChannel));
+                        }
                     }
                     else{
                         Channel mainChannel = new Channel();
                         mainChannel.name = nomChannel;
-                        mainChannel.type = TypeChannel.PUBLIC;
+                        mainChannel.type = TypesChannel.valueOf(messageRecu.get("TypeChannel", String.class));
                         Channel.everyChannels.put(nomChannel, mainChannel);
-                        Channel.everyChannels.get(nomChannel).userList.add(userData);
+                        Channel.everyChannels.get(nomChannel).getUserList().add(userData);
+                        userData.getChannels().add(Channel.everyChannels.get(nomChannel));
+
                     }
                 }
-                if(messageRecu.get("Type").equals("Message")){
+                if(messageRecu.get("Type").equals("MESSAGE")){
                     //On trouve le channel ou envoyer le message
-                    for(Map.Entry<String, Channel> channel : Channel.everyChannels.entrySet()){
-                        String nomChannel =  channel.getKey();
-                        Channel objectChannel =  channel.getValue();
-                        if(messageRecu.get("Channel").equals(nomChannel)){
-                            objectChannel.sendToChannel(messageRecu.toJson());
-                        }
-                    }
+                    Channel channel = Channel.everyChannels.get(messageRecu.get("Channel",String.class));
+                    channel.sendToChannel(messageRecu.toJson());
+                }
+                if(messageRecu.get("Type").equals("INFO")){
+                    String channelRequested = messageRecu.get("Channel",String.class);
+                    Channel channel = Channel.everyChannels.get(channelRequested);
+                    TypesChannel e = channel.type;
+                    Document d = new Document();
+                    d.put("Type", "INFO");
+                    d.put("TypeChannel", e.toString());
+                    userData.send(d.toJson());
                 }
                 System.out.println("waiting for the next line....");
 
@@ -97,9 +107,12 @@ class SSocket implements Runnable {
             //when a connection is closed
             //mainChannel.remove(userData.getSocketAddress());
             userData.getChannels().forEach(channel ->
-                    channel.userList.remove(userData));
+                    channel.getUserList().remove(userData));
             e.printStackTrace();
             System.out.println("Deleting connection...");
+        }
+        catch (IllegalArgumentException e){
+
         }
     }
 }
