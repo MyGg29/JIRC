@@ -37,7 +37,7 @@ public class MainController {
     }
     public void initialize(){
         client.setShowMessage(this::showText);
-        client.joinChannel("Main", TypesChannel.PUBLIC);
+        client.joinChannel(tabs.getSelectionModel().getSelectedItem().getText(), TypesChannel.PUBLIC);
     }
 
     //method to tell the client how we'll write in the textbox, used by the client who's listenning.
