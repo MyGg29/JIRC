@@ -1,5 +1,8 @@
 package client.controllers;
 
+import com.sun.deploy.util.FXLoader;
+import javafx.scene.Node;
+import javafx.stage.Modality;
 import models.Client;
 import javafx.application.Platform;
 import javafx.collections.transformation.FilteredList;
@@ -12,7 +15,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import models.TypesChannel;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -32,7 +37,7 @@ public class MainController {
     }
     public void initialize(){
         client.setShowMessage(this::showText);
-        client.joinChannel("Main");
+        client.joinChannel("Main", TypesChannel.PUBLIC);
     }
 
     //method to tell the client how we'll write in the textbox, used by the client who's listenning.
@@ -59,6 +64,7 @@ public class MainController {
             TextArea content = new TextArea();
             content.setOnMouseClicked(this::showJoinChannel);
             content.setEditable(false);
+            content.setPromptText("Click to add a channel");
             newTab.setContent(content);
             tabs.getTabs().add(tabs.getTabs().size() - 1, newTab);
             tabs.getSelectionModel().select(newTab);
@@ -70,7 +76,33 @@ public class MainController {
     }
 
     @FXML
-    private void showJoinChannel(MouseEvent event){
+    private void showJoinChannel (MouseEvent event) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/JoinChannel.fxml"));
+            Parent root = loader.load();
+            JoinChannelController joinChannelModalController = loader.getController();
+            Stage joinChannelStage = new Stage();
+            joinChannelStage.setTitle("Rejoindre un channel");
+            joinChannelStage.initModality(Modality.APPLICATION_MODAL);
+            joinChannelStage.setScene(new Scene(root));
+            joinChannelStage.initOwner(
+                    ((Node)event.getSource()).getScene().getWindow()
+            );
+            joinChannelStage.showAndWait();
+
+            if(joinChannelModalController.isPresent()){
+                String channelNameEntree = joinChannelModalController.getChannelName();
+                TypesChannel channelTypeEntree = joinChannelModalController.getChannelType();
+                tabs.getSelectionModel().getSelectedItem().setText(channelNameEntree);//on change le nom du tab actuel
+                tabs.getSelectionModel().getSelectedItem().getContent().setOnMouseClicked(null);//on veux pouvoir faire ca qu'une fois
+                client.joinChannel(channelNameEntree, channelTypeEntree);
+            }
+        }
+        catch(IOException e){
+
+        }
+        return;
+        /*
         final TextInputDialog textDialog = new TextInputDialog();
         textDialog.setContentText("Entrer l'invitation");
         textDialog.setTitle("Rejoindre un channel");
@@ -81,7 +113,7 @@ public class MainController {
             tabs.getSelectionModel().getSelectedItem().setText(invitation.get());//on change le nom du tab actuel
             tabs.getSelectionModel().getSelectedItem().getContent().setOnMouseClicked(null);//on veux pouvoir faire ca qu'une fois
             client.joinChannel(invitation.get());
-        }
+        }*/
     }
 
     @FXML
@@ -92,6 +124,7 @@ public class MainController {
             stage.setTitle("Channel Parameters");
             stage.setScene(new Scene(root));
             stage.show();
+            client.getChannelInfo("Main");
         }
         catch(Exception e){}
     }
@@ -99,6 +132,7 @@ public class MainController {
     @FXML
     public void shutdown(WindowEvent e){
         //cleanup what's needed
+        client.shutdown();
         Platform.exit();
         System.out.println("exiting...");
     }

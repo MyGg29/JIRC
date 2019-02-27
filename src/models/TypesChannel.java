@@ -1,5 +1,5 @@
 package models;
 
-public enum TypeChannel {
+public enum TypesChannel {
     PUBLIC, PRIVATE, GROUPE
 }

@@ -55,7 +55,7 @@
                        <tabs>
                            <Tab text="Général">
                                <content>
-                                   <TextArea fx:id="chatBox1" editable="false" onMouseClicked="#showJoinChannel" promptText="Cliquez pour créer une nouvelle conversation" />
+                                   <TextArea fx:id="chatBox1" editable="false" />
                                </content>
                            </Tab>
                            <Tab onSelectionChanged="#addTab" text="+">
