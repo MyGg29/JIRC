@@ -12,14 +12,27 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("views/Client.fxml"));
+        //FXMLLoader loaderConnexion = new FXMLLoader(getClass().getResource("views/Connexion.fxml"));//
+
         final Parent root = loader.load();
+        //final Parent rootConnexion = loaderConnexion.load();//
         primaryStage.setTitle("JMessenger");
+
         Scene scene = new Scene(root);
+        //Scene sceneConnexion = new Scene(rootConnexion); //
+
         scene.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
+        //sceneConnexion.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
+
         primaryStage.setScene(scene);
+        //primaryStage.setScene(sceneConnexion);//
 
         MainController controller = loader.getController();
+        //MainController controllerConnexion  = loaderConnexion.getController();//
+
         primaryStage.setOnCloseRequest(controller::shutdown);
+        //primaryStage.setOnCloseRequest(controllerConnexion::shutdown);//
+
         primaryStage.show();
     }
 
