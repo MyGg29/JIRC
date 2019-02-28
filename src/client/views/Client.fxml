@@ -18,16 +18,16 @@
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="402.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controllers.MainController">
          <children>
-            <GridPane alignment="CENTER" layoutX="14.0" layoutY="478.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+            <GridPane alignment="CENTER" layoutX="14.0" layoutY="478.0" maxHeight="1080.0" maxWidth="1920.0" minHeight="200.0" minWidth="300.0" prefHeight="1080.0" prefWidth="1920.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="308.0" minWidth="10.0" prefWidth="308.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="200.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="84.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="224.0" minWidth="10.0" prefWidth="212.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="72.0" />
             <ColumnConstraints />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints maxHeight="142.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="304.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="142.0" minHeight="10.0" prefHeight="88.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="316.0" minHeight="10.0" prefHeight="272.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
@@ -64,12 +64,16 @@
                            </Tab>
                        </tabs>
                    </TabPane>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
+            <ImageView fitHeight="80.0" fitWidth="111.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+               <image>
+                  <Image url="@../ressources/logodetoured.png" />
+               </image></ImageView>
             <Label text="JMessenger" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS">
                <font>
                   <Font size="26.0" />
                </font>
             </Label>
+            <ImageView fitHeight="33.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
                </children>
             </GridPane>
       
