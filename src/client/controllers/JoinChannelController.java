@@ -9,7 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import models.TypesChannel;
 
-import java.util.Map;
 
 public class JoinChannelController {
 

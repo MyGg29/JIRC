@@ -11,7 +11,7 @@ public class Channel {
     public String name;
     private List<User> userList = new ArrayList<>();
     private List<User> adminUserList;
-    private List<User> whiteList = new ArrayList<>();
+    private List<User> whiteList = new ArrayList<>(); // liste des utilisateurs autorisé à utiliser le channel
 
     public Channel(){
     }
@@ -22,9 +22,13 @@ public class Channel {
                 if(type == TypesChannel.PUBLIC){
                     user.send(s);
                 }
-                if((type == TypesChannel.GROUPE || type == TypesChannel.PRIVATE)
-                        && whiteList.contains(user)){
-                    user.send(s);
+                if(type == TypesChannel.GROUPE || type == TypesChannel.PRIVATE){
+                    if(whiteList.contains(user)){
+                        user.send(s);
+                    }
+                    else{
+                        System.out.println("User :" + user.getName() + "tried to send a message but was not allowed to");
+                    }
                 }
             }
         }
@@ -45,7 +49,7 @@ public class Channel {
         return false;
     }
 
-    private boolean addUserToWhiteList(User user){
+    public boolean addUserToWhiteList(User user){
         return this.whiteList.add(user);
     }
     public List<User> getUserList() {

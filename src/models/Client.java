@@ -1,11 +1,8 @@
 package models;
 
-import org.bson.BsonType;
 import org.bson.Document;
-import server.Channel;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
@@ -15,12 +12,15 @@ public class Client{
     private DataInputStream dIn;
     private DataOutputStream dOut;
     private int serverPort = 666;
+    private int clientPort = 0;
     private Function<String,String,String, Void> showMessage;
+
 
     public Client(){
         try {
             InetAddress inetAdd = InetAddress.getByName("127.0.0.1");
             Socket socket = new Socket(inetAdd, serverPort);//Ouvre un socket sur localhost
+            setClientPort(socket.getLocalPort());
 
             InputStream in = socket.getInputStream();
             OutputStream out = socket.getOutputStream();
@@ -88,6 +88,14 @@ public class Client{
        send(d.toJson());
     }
 
+    public void addToWhitelist(String user, String channel){
+        Document d = new Document();
+        d.put("Type", "PARAMS");
+        d.put("AddUser", user);
+        d.put("Channel", channel);
+        send(d.toJson());
+
+    }
     //Permet de donner à la classe un comportement exterieur quand un message arrive sur le stream
     public void setShowMessage(Function<String,String,String,Void> showMessageFunction){
         this.showMessage = showMessageFunction;
@@ -106,6 +114,13 @@ public class Client{
         }
     }
 
+    public int getClientPort() {
+        return clientPort;
+    }
+
+    public void setClientPort(int clientPort) {
+        this.clientPort = clientPort;
+    }
 }
 
 class ListenTheServer implements Runnable {

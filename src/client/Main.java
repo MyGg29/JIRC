@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
@@ -15,28 +16,27 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("views/Client.fxml"));
-        //FXMLLoader loaderConnexion = new FXMLLoader(getClass().getResource("views/Connexion.fxml"));//
 
         final Parent root = loader.load();
-        //final Parent rootConnexion = loaderConnexion.load();//
         primaryStage.setTitle("JMessenger");
-
         Scene scene = new Scene(root);
-        //Scene sceneConnexion = new Scene(rootConnexion); //
-
         scene.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
-        //sceneConnexion.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
-
         primaryStage.setScene(scene);
-        //primaryStage.setScene(sceneConnexion);//
 
         MainController controller = loader.getController();
-        //MainController controllerConnexion  = loaderConnexion.getController();//
-
         primaryStage.setOnCloseRequest(controller::shutdown);
-        //primaryStage.setOnCloseRequest(controllerConnexion::shutdown);//
-
         primaryStage.show();
+
+        FXMLLoader loaderConnexion = new FXMLLoader(getClass().getResource("views/Connexion.fxml"));//
+        final Parent rootConnexion = loaderConnexion.load();//
+        Scene sceneConnexion = new Scene(rootConnexion); //
+        sceneConnexion.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
+        Stage connexionStage = new Stage();
+        connexionStage.setTitle("Connexion");
+        connexionStage.initModality(Modality.APPLICATION_MODAL);
+        connexionStage.setScene(sceneConnexion);
+        connexionStage.initOwner(scene.getWindow());//Le model de connexion est celui de la scene principale
+        connexionStage.showAndWait();
     }
 
     @Override

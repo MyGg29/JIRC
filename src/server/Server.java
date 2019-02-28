@@ -99,6 +99,13 @@ class SSocket implements Runnable {
                     d.put("TypeChannel", e.toString());
                     userData.send(d.toJson());
                 }
+                if(messageRecu.get("Type").equals("PARAMS")){
+                    String userIP = messageRecu.get("AddUser", String.class);
+                    String channel = messageRecu.get("Channel", String.class);
+                    User user = new User();
+                    user.setName(userIP);
+                    Channel.everyChannels.get(channel).addUserToWhiteList(user);
+                }
                 System.out.println("waiting for the next line....");
 
             }

@@ -119,6 +119,7 @@ public class MainController {
     @FXML
     private void showChannelParameters(ActionEvent event){
         try{
+            client.addToWhitelist("/127.0.0.1:" + 334090, "Accueil");
             Parent root = FXMLLoader.load(getClass().getResource("../views/ChannelParameters.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Channel Parameters");
