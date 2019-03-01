@@ -1,5 +1,8 @@
 package server;
 
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import models.TypesChannel;
 import models.TypesMessage;
 import org.bson.Document;
@@ -13,14 +16,8 @@ import java.util.*;
 public class Server {
     public static void main(String[] args) {
         int port = 666; //random port number
-/*
         MongoClient mongo = new MongoClient("localhost",27017);
-        MongoDatabase JIRC = mongo.getDatabase("JIRC");
-        MongoCollection logsCollection =JIRC.getCollection("logs");
-        Document message = new Document();
-        message.put("Sec", "second message");
-        logsCollection.insertOne(message);
-*/
+        MongoDatabase jIrcDatabase = mongo.getDatabase("JIRC");
 
         try {
             ServerSocket ss = new ServerSocket(port); //Le serveur ecoute quel port
@@ -31,7 +28,7 @@ public class Server {
 
                 //On ajoute le client dans la liste des clients connectés.
                 //On crée un thread par client
-                SSocket sSocket = new SSocket(socket);
+                SSocket sSocket = new SSocket(socket, jIrcDatabase);
                 Thread t = new Thread(sSocket);
                 t.start();
             }
@@ -45,13 +42,15 @@ public class Server {
 class SSocket implements Runnable {
     private Socket socket;
     private User userData = new User();
+    MongoDatabase database;
 
-    public SSocket(Socket socket) throws IOException {
+    public SSocket(Socket socket, MongoDatabase jIrcDatabase) throws IOException {
         this.socket = socket;
         userData.setOutputStream(new DataOutputStream(this.socket.getOutputStream()));
         userData.setInputStream(new DataInputStream(this.socket.getInputStream()));
         userData.setSocketAddress(this.socket.getRemoteSocketAddress());
-        userData.setName(this.socket.getRemoteSocketAddress().toString());
+        userData.setName("DefaultName (temporary)");
+        this.database = jIrcDatabase;
     }
 
     @Override
@@ -64,7 +63,8 @@ class SSocket implements Runnable {
                 System.out.println("Received from " + userData.getSocketAddress() + " : " + line);
                 //parsing of the JSON
                 Document messageRecu = Document.parse(line);
-                messageRecu.put("Sender", userData.getName());
+                messageRecu.put("Sender", userData.getSocketAddress().toString());
+                messageRecu.put("SenderName", userData.getName());
 
                 if(messageRecu.get("Type").equals("JOIN")){
                     //Si on veux join un channel
@@ -82,13 +82,14 @@ class SSocket implements Runnable {
                         Channel.everyChannels.put(nomChannel, mainChannel);
                         Channel.everyChannels.get(nomChannel).getUserList().add(userData);
                         userData.getChannels().add(Channel.everyChannels.get(nomChannel));
-
                     }
+                    database.getCollection("join").insertOne(messageRecu);
                 }
                 if(messageRecu.get("Type").equals("MESSAGE")){
                     //On trouve le channel ou envoyer le message
                     Channel channel = Channel.everyChannels.get(messageRecu.get("Channel",String.class));
                     channel.sendToChannel(messageRecu.toJson());
+                    database.getCollection("messages").insertOne(messageRecu);
                 }
                 if(messageRecu.get("Type").equals("INFO")){
                     String channelRequested = messageRecu.get("Channel",String.class);
@@ -105,6 +106,10 @@ class SSocket implements Runnable {
                     User user = new User();
                     user.setName(userIP);
                     Channel.everyChannels.get(channel).addUserToWhiteList(user);
+                    database.getCollection("params").insertOne(messageRecu);
+                }
+                if(messageRecu.get("Type").equals("LOGIN")){
+
                 }
                 System.out.println("waiting for the next line....");
 

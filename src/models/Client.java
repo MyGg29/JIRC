@@ -1,11 +1,13 @@
 package models;
 
+import com.sun.javafx.scene.control.skin.DatePickerSkin;
 import org.bson.Document;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Date;
 
 public class Client{
     private volatile boolean exitListenThread = false;
@@ -20,7 +22,8 @@ public class Client{
         try {
             InetAddress inetAdd = InetAddress.getByName("127.0.0.1");
             Socket socket = new Socket(inetAdd, serverPort);//Ouvre un socket sur localhost
-            setClientPort(socket.getLocalPort());
+            this.clientPort = socket.getLocalPort();
+
 
             InputStream in = socket.getInputStream();
             OutputStream out = socket.getOutputStream();
@@ -32,6 +35,10 @@ public class Client{
             listen.start();
         }
         catch (Exception e) { }
+    }
+
+    public void connect(String userName,String password){
+
     }
 
     public void joinChannel(String channelName, TypesChannel typeChannel){
@@ -83,6 +90,7 @@ public class Client{
     public void sendMessage(String message, String channel) {
        Document d = new Document();
        d.put("Type", "MESSAGE");
+       d.put("Time", new Date());
        d.put("Channel", channel);
        d.put("Content", message);
        send(d.toJson());
@@ -123,9 +131,3 @@ public class Client{
     }
 }
 
-class ListenTheServer implements Runnable {
-
-    @Override
-    public void run() {
-    }
-}

@@ -13,14 +13,14 @@
             <Insets />
          </opaqueInsets>
    <children>
-      <Button layoutX="177.0" layoutY="308.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="246.0" text="Connexion" />
-      <TextField layoutX="177.0" layoutY="177.0" prefHeight="31.0" prefWidth="246.0" promptText="Identifiant" />
+      <Button fx:id="connexionBtn" layoutX="177.0" layoutY="308.0" mnemonicParsing="false" onAction="#clickConnexion" prefHeight="31.0" prefWidth="246.0" text="Connexion" />
+      <TextField fx:id="identifiant" layoutX="177.0" layoutY="177.0" prefHeight="31.0" prefWidth="246.0" promptText="Identifiant" />
       <Label layoutX="120.0" layoutY="49.0" text="Bienvenue sur JMessenger">
          <font>
             <Font size="31.0" />
          </font>
       </Label>
       <Label layoutX="128.0" layoutY="113.0" text="Veuillez vous identifier pour accéder à la messagerie" />
-      <PasswordField layoutX="178.0" layoutY="240.0" prefHeight="31.0" prefWidth="246.0" promptText="Mot de passe" />
+      <PasswordField fx:id="password" layoutX="178.0" layoutY="240.0" prefHeight="31.0" prefWidth="246.0" promptText="Mot de passe" />
    </children>
       </AnchorPane>

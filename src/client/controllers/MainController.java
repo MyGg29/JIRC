@@ -40,6 +40,7 @@ public class MainController {
         client.joinChannel(tabs.getSelectionModel().getSelectedItem().getText(), TypesChannel.PUBLIC);
     }
 
+
     //method to tell the client how we'll write in the textbox, used by the client who's listenning.
     public Void showText(String channel, String sender, String content){
         //On append pour le tab ouverte mais aussi toutes les tabs ouvertes

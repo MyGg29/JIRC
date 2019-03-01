@@ -1,5 +1,6 @@
 package client;
 
+import client.controllers.ConnexionController;
 import client.controllers.MainController;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClients;
@@ -23,19 +24,25 @@ public class Main extends Application {
         scene.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
         primaryStage.setScene(scene);
 
-        MainController controller = loader.getController();
-        primaryStage.setOnCloseRequest(controller::shutdown);
+        MainController mainController = loader.getController();
+        primaryStage.setOnCloseRequest(mainController::shutdown);
         primaryStage.show();
 
+        //Init the connexion window
+        Stage connexionStage = new Stage();
         FXMLLoader loaderConnexion = new FXMLLoader(getClass().getResource("views/Connexion.fxml"));//
         final Parent rootConnexion = loaderConnexion.load();//
         Scene sceneConnexion = new Scene(rootConnexion); //
+
         sceneConnexion.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
-        Stage connexionStage = new Stage();
+        ConnexionController connexionController = loaderConnexion.getController();
+
         connexionStage.setTitle("Connexion");
         connexionStage.initModality(Modality.APPLICATION_MODAL);
-        connexionStage.setScene(sceneConnexion);
         connexionStage.initOwner(scene.getWindow());//Le model de connexion est celui de la scene principale
+        connexionStage.setScene(sceneConnexion);
+
+
         connexionStage.showAndWait();
     }
 
