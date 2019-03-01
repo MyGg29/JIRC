@@ -3,6 +3,7 @@ package server;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ public class User {
     private DataInputStream inputStream;//Where we receive
     private SocketAddress socketAddress;
     private String name;
+    private SocketAddress ip;
     private List<Channel> channels = new ArrayList<>();
 
     public Boolean addChannel(Channel invit){
@@ -61,4 +63,5 @@ public class User {
     public void setChannels(List<Channel> channels) {
         this.channels = channels;
     }
+
 }
