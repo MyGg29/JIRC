@@ -58,7 +58,8 @@ class SSocket implements Runnable {
         try {
             String line;
             while (true) {
-                //Les données sont reçu en utf-16
+
+                /* ---------- Réception des données en UTF-16 ---------- */
                 line = userData.getInputStream().readUTF();
                 System.out.println("Received from " + userData.getSocketAddress() + " : " + line);
                 //parsing of the JSON
@@ -66,8 +67,10 @@ class SSocket implements Runnable {
                 messageRecu.put("Sender", userData.getSocketAddress().toString());
                 messageRecu.put("SenderName", userData.getName());
 
+
+                /* ---------- Rejoindre un channel ---------- */
                 if(messageRecu.get("Type").equals("JOIN")){
-                    //Si on veux join un channel
+
                     String nomChannel = messageRecu.get("Channel",String.class);
                     if(Channel.everyChannels.containsKey(nomChannel)){
                         if(Channel.everyChannels.get(nomChannel).isAllowedToJoin(userData)){
@@ -85,12 +88,17 @@ class SSocket implements Runnable {
                     }
                     database.getCollection("join").insertOne(messageRecu);
                 }
+
+
+                /* ---------- Affichage du message reçu dans le channel concerné ---------- */
                 if(messageRecu.get("Type").equals("MESSAGE")){
-                    //On trouve le channel ou envoyer le message
+
                     Channel channel = Channel.everyChannels.get(messageRecu.get("Channel",String.class));
                     channel.sendToChannel(messageRecu.toJson());
                     database.getCollection("messages").insertOne(messageRecu);
                 }
+
+                /* ---------- Information sur le channel ---------- */
                 if(messageRecu.get("Type").equals("INFO")){
                     String channelRequested = messageRecu.get("Channel",String.class);
                     Channel channel = Channel.everyChannels.get(channelRequested);
@@ -100,6 +108,8 @@ class SSocket implements Runnable {
                     d.put("TypeChannel", e.toString());
                     userData.send(d.toJson());
                 }
+
+                /* ---------- Paramètres ---------- */
                 if(messageRecu.get("Type").equals("PARAMS")){
                     String userIP = messageRecu.get("AddUser", String.class);
                     String channel = messageRecu.get("Channel", String.class);
@@ -108,6 +118,8 @@ class SSocket implements Runnable {
                     Channel.everyChannels.get(channel).addUserToWhiteList(user);
                     database.getCollection("params").insertOne(messageRecu);
                 }
+
+                /* ---------- Connexion ---------- */
                 if(messageRecu.get("Type").equals("LOGIN")){
 
                 }
@@ -118,8 +130,7 @@ class SSocket implements Runnable {
         catch (IOException e) {
             //when a connection is closed
             //mainChannel.remove(userData.getSocketAddress());
-            userData.getChannels().forEach(channel ->
-                    channel.getUserList().remove(userData));
+            userData.getChannels().forEach(channel -> channel.getUserList().remove(userData));
             e.printStackTrace();
             System.out.println("Deleting connection...");
         }

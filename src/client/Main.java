@@ -16,9 +16,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("views/Client.fxml"));
 
         final Parent root = loader.load();
+
+        /* ---------- Initialisation de la fenêtre principale ---------- */
         primaryStage.setTitle("JMessenger");
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
@@ -28,7 +32,7 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest(mainController::shutdown);
         primaryStage.show();
 
-        //Init the connexion window
+        /* ---------- Initialisation de la fenêtre de connexion ---------- */
         Stage connexionStage = new Stage();
         FXMLLoader loaderConnexion = new FXMLLoader(getClass().getResource("views/Connexion.fxml"));//
         final Parent rootConnexion = loaderConnexion.load();//
@@ -48,10 +52,11 @@ public class Main extends Application {
 
     @Override
     public void stop(){
-        System.out.println("stoping...");
+        System.out.println("Arrêt...");
     }
 
     public static void main(String[] args) {
+        /* ---------- Lancement ---------- */
         launch(args);
     }
 }

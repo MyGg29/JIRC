@@ -58,6 +58,9 @@ public class MainController {
     }
 
     @FXML
+
+    /* ---------- Création d'un nouvel onglet ---------- */
+
     private void addTab(){
         try{
             System.out.println("Adding a tab...");
@@ -77,6 +80,9 @@ public class MainController {
     }
 
     @FXML
+
+    /* ---------- Ouverture de la fenêtre d'accès à un channel ---------- */
+
     private void showJoinChannel (MouseEvent event) {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/JoinChannel.fxml"));
@@ -118,6 +124,9 @@ public class MainController {
     }
 
     @FXML
+
+    /* ---------- Ouverture de la fenêtre de paramètres ---------- */
+
     private void showChannelParameters(ActionEvent event){
         try{
             client.addToWhitelist("/127.0.0.1:" + 334090, "Accueil");
@@ -132,6 +141,9 @@ public class MainController {
     }
 
     @FXML
+
+    /* ---------- Fermeture de la fenêtre ---------- */
+
     public void shutdown(WindowEvent e){
         //cleanup what's needed
         client.shutdown();

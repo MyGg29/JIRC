@@ -20,10 +20,13 @@ public class Client{
 
     public Client(){
         try {
+            /* ---------- Ouverture d'un socket en localhost ---------- */
+
             InetAddress inetAdd = InetAddress.getByName("127.0.0.1");
-            Socket socket = new Socket(inetAdd, serverPort);//Ouvre un socket sur localhost
+            Socket socket = new Socket(inetAdd, serverPort);
             this.clientPort = socket.getLocalPort();
 
+            /* ---------- Lecture/écriture ---------- */
 
             InputStream in = socket.getInputStream();
             OutputStream out = socket.getOutputStream();
@@ -31,15 +34,19 @@ public class Client{
             dIn = new DataInputStream(in);
             dOut = new DataOutputStream(out);
 
-            Thread listen = new Thread(this::listen); //créer un thread qui va faire tourner listen()
+            /* ---------- Thread d'écoute ---------- */
+
+            Thread listen = new Thread(this::listen);
             listen.start();
         }
         catch (Exception e) { }
     }
 
     public void connect(String userName,String password){
-
+        //Connexion
     }
+
+    /* ---------- Rejoindre un channel ---------- */
 
     public void joinChannel(String channelName, TypesChannel typeChannel){
         Document d = new Document();
@@ -49,17 +56,22 @@ public class Client{
         send(d.toJson());
     }
 
-    public void getChannelInfo(String channelName){ Document d = new Document();
+    /* ---------- Récupérer infos d'un channel ---------- */
+
+    public void getChannelInfo(String channelName){
+        Document d = new Document();
         d.put("Type", "INFO");
         d.put("Channel", channelName);
         send(d.toJson());
     }
-    // Used to show the message on the screen. The client is always listenning for a server response and show it when it sees something
+
+    /* ---------- Ecoute du serveur et affichage des messages à l'écran ---------- */
+
     public void listen(){
         while(!exitListenThread){
             try{
                 String line = dIn.readUTF();
-                System.out.println("Line Sent back by the server---" + line);
+                System.out.println("Retour du serveur ---> " + line);
                 Document messageRecu = Document.parse(line);
 
                 if(messageRecu.get("Type").equals("MESSAGE")){
@@ -72,7 +84,7 @@ public class Client{
                 }
             } catch (SocketException e){
                 e.printStackTrace();
-                System.out.println("Closing listenning thread...");
+                System.out.println("Fermeture du thread en écoute...");
                 exitListenThread = true;
             } catch (IOException e){
                 e.printStackTrace();
@@ -80,12 +92,19 @@ public class Client{
         }
     }
 
+    /* ---------- Fonction d'envoi ---------- */
+
     private void send(String text){
         try{
-        dOut.writeUTF(text);
-        dOut.flush();
-        }catch(IOException e){}
+            dOut.writeUTF(text);
+            dOut.flush();
+        }
+        catch(IOException e){
+
+        }
     }
+
+    /* ---------- Envoi d'un message, sur un channel défini avec horodatage ---------- */
 
     public void sendMessage(String message, String channel) {
        Document d = new Document();
@@ -95,6 +114,8 @@ public class Client{
        d.put("Content", message);
        send(d.toJson());
     }
+
+    /* ----------  ---------- */
 
     public void addToWhitelist(String user, String channel){
         Document d = new Document();
@@ -109,13 +130,16 @@ public class Client{
         this.showMessage = showMessageFunction;
     }
 
+
+    /* ---------- Arret ---------- */
+
     public void shutdown(){
         try{
             dIn.close();
             dOut.close();
         }
         catch (IOException e){
-            System.out.println("Problem closing the server socket");
+            System.out.println("Problème avec la fermeture du socket serveur...");
         }
         finally {
 
@@ -123,10 +147,12 @@ public class Client{
     }
 
     public int getClientPort() {
+
         return clientPort;
     }
 
     public void setClientPort(int clientPort) {
+
         this.clientPort = clientPort;
     }
 }

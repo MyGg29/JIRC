@@ -21,37 +21,46 @@ public class User {
     }
 
     public String getName() {
+
         return name;
     }
 
     public void setName(String name) {
+
         this.name = name;
     }
 
     public DataInputStream getInputStream() {
+
         return inputStream;
     }
 
     public void setInputStream(DataInputStream inputStream) {
+
         this.inputStream = inputStream;
     }
     public SocketAddress getSocketAddress() {
+
         return socketAddress;
     }
 
     public void setSocketAddress(SocketAddress socketAddress) {
+
         this.socketAddress = socketAddress;
     }
 
     public DataOutputStream getOutputStream() {
+
         return outputStream;
     }
 
     public void setOutputStream(DataOutputStream outputStream) {
+
         this.outputStream = outputStream;
     }
 
     public List<Channel> getChannels() {
+
         return channels;
     }
 
@@ -61,6 +70,7 @@ public class User {
     }
 
     public void setChannels(List<Channel> channels) {
+
         this.channels = channels;
     }
 
