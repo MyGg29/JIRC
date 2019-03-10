@@ -10,39 +10,39 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.Client;
 
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        Client client = new Client();
+
+        //init main window
         FXMLLoader loader = new FXMLLoader(getClass().getResource("views/Client.fxml"));
-
         final Parent root = loader.load();
-        primaryStage.setTitle("JMessenger");
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
-        primaryStage.setScene(scene);
-
         MainController mainController = loader.getController();
+        Scene scene = new Scene(root);
+        mainController.setClient(client);//important
+        primaryStage.setTitle("JMessenger");
+        primaryStage.setScene(scene);
         primaryStage.setOnCloseRequest(mainController::shutdown);
+        scene.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
         primaryStage.show();
 
         //Init the connexion window
-        Stage connexionStage = new Stage();
         FXMLLoader loaderConnexion = new FXMLLoader(getClass().getResource("views/Connexion.fxml"));//
         final Parent rootConnexion = loaderConnexion.load();//
-        Scene sceneConnexion = new Scene(rootConnexion); //
-
-        sceneConnexion.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
         ConnexionController connexionController = loaderConnexion.getController();
-
+        Stage connexionStage = new Stage();
+        Scene sceneConnexion = new Scene(rootConnexion); //
+        connexionController.setClient(client); //important
         connexionStage.setTitle("Connexion");
         connexionStage.initModality(Modality.APPLICATION_MODAL);
         connexionStage.initOwner(scene.getWindow());//Le model de connexion est celui de la scene principale
         connexionStage.setScene(sceneConnexion);
-
-
+        sceneConnexion.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
         connexionStage.showAndWait();
     }
 
@@ -54,5 +54,6 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
 }
 

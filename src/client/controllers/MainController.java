@@ -1,7 +1,7 @@
 package client.controllers;
 
-import com.sun.deploy.util.FXLoader;
 import javafx.scene.Node;
+import javafx.scene.input.ScrollEvent;
 import javafx.stage.Modality;
 import models.Client;
 import javafx.application.Platform;
@@ -16,10 +16,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import models.TypesChannel;
+import util.ISODate;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.Optional;
 
 
 public class MainController {
@@ -29,30 +28,33 @@ public class MainController {
     private Button send;
     @FXML
     private TabPane tabs;
-    @FXML
     private Client client;
 
     public MainController(){
-        client = new Client();
+
     }
     public void initialize(){
-        client.setShowMessage(this::showText);
-        client.joinChannel(tabs.getSelectionModel().getSelectedItem().getText(), TypesChannel.PUBLIC);
-    }
+        Platform.runLater(() -> {
+            client.setShowMessage(this::showText);
+            client.joinChannel(tabs.getSelectionModel().getSelectedItem().getText(), TypesChannel.PUBLIC);
+        });
 
+    }
 
     //method to tell the client how we'll write in the textbox, used by the client who's listenning.
     public Void showText(String channel, String sender, String content){
         //On append pour le tab ouverte mais aussi toutes les tabs ouvertes
         //      -> On peux avoir plusieurs tabs lié au même chan ouvertes en même temps
         FilteredList<Tab> similarTabs = tabs.getTabs().filtered(e -> e.getText().equals(channel));
+        ISODate now = new ISODate();
         similarTabs.forEach(tab ->
-                ((TextArea)tab.getContent()).appendText(new Date().toLocaleString() + " / " + sender + " : " + content + "\n")
+                ((TextArea)tab.getContent()).appendText(now + " / " + sender + " : " + content + "\n")
         );
         return null;
     }
+
     @FXML
-    private void sendText(ActionEvent e){
+    private void sendMessage(ActionEvent e){
         client.sendMessage(textInput.getText(), tabs.getSelectionModel().getSelectedItem().getText());
         textInput.clear();
     }
@@ -100,35 +102,31 @@ public class MainController {
             }
         }
         catch(IOException e){
-
+            e.printStackTrace();
         }
-        return;
-        /*
-        final TextInputDialog textDialog = new TextInputDialog();
-        textDialog.setContentText("Entrer l'invitation");
-        textDialog.setTitle("Rejoindre un channel");
-        textDialog.setHeaderText(null);//on ne veux pas afficher le header n'y d'image pour pas surcharger le truc
-        textDialog.setGraphic(null);
-        Optional<String> invitation =  textDialog.showAndWait();
-        if(invitation.isPresent()){
-            tabs.getSelectionModel().getSelectedItem().setText(invitation.get());//on change le nom du tab actuel
-            tabs.getSelectionModel().getSelectedItem().getContent().setOnMouseClicked(null);//on veux pouvoir faire ca qu'une fois
-            client.joinChannel(invitation.get());
-        }*/
     }
 
     @FXML
     private void showChannelParameters(ActionEvent event){
         try{
-            client.addToWhitelist("/127.0.0.1:" + 334090, "Accueil");
-            Parent root = FXMLLoader.load(getClass().getResource("../views/ChannelParameters.fxml"));
+            FXMLLoader loaderParameters = new FXMLLoader(getClass().getResource("../views/ChannelParameters.fxml"));//
+            final Parent rootParameters = loaderParameters.load();//
+            ParametersController parametresController = loaderParameters.getController();
             Stage stage = new Stage();
+            parametresController.setClient(client);
             stage.setTitle("Channel Parameters");
-            stage.setScene(new Scene(root));
+            stage.setScene(new Scene(rootParameters));
             stage.show();
-            client.getChannelInfo("Main");
         }
-        catch(Exception e){}
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void onScrollTextArea(ScrollEvent event){
+        TextArea textArea = (TextArea)event.getSource();
+        int direction = (int) Math.round(event.getDeltaY());
+        //textArea.setScrollTop(textArea.getScrollTop() + direction);
     }
 
     @FXML
@@ -137,5 +135,9 @@ public class MainController {
         client.shutdown();
         Platform.exit();
         System.out.println("exiting...");
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 }

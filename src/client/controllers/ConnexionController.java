@@ -1,9 +1,13 @@
 package client.controllers;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import models.Client;
 
 
 public class ConnexionController {
@@ -13,6 +17,8 @@ public class ConnexionController {
     TextField identifiant;
     @FXML
     TextField password;
+
+    Client client;
     public ConnexionController(){
 
     }
@@ -22,6 +28,26 @@ public class ConnexionController {
     @FXML
     public void clickConnexion(ActionEvent e)
     {
+        client.setConnexionCallback(this::handleAfterConnexion);
+        client.connect(identifiant.getText(),password.getText());
+    }
 
+    private Void handleAfterConnexion(boolean connected){
+        if(connected){
+            Stage connexionStage = (Stage)identifiant.getScene().getWindow();
+            Platform.runLater(connexionStage::close);
+        }
+        else{
+            Platform.runLater(() ->{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error connexion");
+                alert.showAndWait();
+            });
+        }
+        return null;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 }

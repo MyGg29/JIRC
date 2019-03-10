@@ -19,16 +19,8 @@ public class Channel {
     public void sendToChannel(String s){
         try{
             for(User user : this.userList){
-                if(type == TypesChannel.PUBLIC){
+                if(isAllowedToJoin(user)){
                     user.send(s);
-                }
-                if(type == TypesChannel.GROUPE || type == TypesChannel.PRIVATE){
-                    if(whiteList.contains(user)){
-                        user.send(s);
-                    }
-                    else{
-                        System.out.println("User :" + user.getName() + "tried to send a message but was not allowed to");
-                    }
                 }
             }
         }
@@ -39,12 +31,18 @@ public class Channel {
 
 
     public boolean isAllowedToJoin(User user) {
-        if(type == TypesChannel.PUBLIC){
+        if(this.type == TypesChannel.PUBLIC){
             return true;
         }
-        if((type == TypesChannel.GROUPE || type == TypesChannel.PRIVATE)
-                && this.whiteList.contains(user)){
-            return true;
+        //Check if the user is in the whitelist so we know if he can join the channel
+        if(this.type == TypesChannel.GROUPE || this.type == TypesChannel.PRIVATE){
+            //filter the whitelist to see if the user is inside
+            Optional<User> filteredWhitelist = this.whiteList.stream().filter(whiteListedUser -> user.getName().equals(whiteListedUser.getName()))
+                                                             .findFirst();
+            //if the user is in the whitelist
+            if(filteredWhitelist.isPresent()){
+                return true;
+            }
         }
         return false;
     }

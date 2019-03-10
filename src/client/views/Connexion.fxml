@@ -21,6 +21,6 @@
          </font>
       </Label>
       <Label layoutX="128.0" layoutY="113.0" text="Veuillez vous identifier pour accéder à la messagerie" />
-      <PasswordField fx:id="password" layoutX="178.0" layoutY="240.0" prefHeight="31.0" prefWidth="246.0" promptText="Mot de passe" />
+      <PasswordField fx:id="password" layoutX="178.0" layoutY="240.0" onAction="#clickConnexion" prefHeight="31.0" prefWidth="246.0" promptText="Mot de passe" />
    </children>
       </AnchorPane>

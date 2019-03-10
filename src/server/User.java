@@ -1,5 +1,7 @@
 package server;
 
+import org.bson.Document;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -64,4 +66,15 @@ public class User {
         this.channels = channels;
     }
 
+    public void anwserConnectionAttempt(boolean answserType) throws IOException {
+        Document d = new Document();
+        d.put("Type", "LOGIN");
+        if(answserType){
+            d.put("Response","Ok");
+        }
+        else{
+            d.put("Response","NotOk");
+        }
+        this.send(d.toJson());
+    }
 }
