@@ -1,6 +1,7 @@
 package client.controllers;
 
 import com.sun.deploy.util.FXLoader;
+import com.sun.org.glassfish.external.statistics.Stats;
 import javafx.scene.Node;
 import javafx.stage.Modality;
 import models.Client;
@@ -17,9 +18,13 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import models.TypesChannel;
 
+import javax.swing.JTextField;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
+
+import static javafx.geometry.Pos.CENTER;
 
 
 public class MainController {
@@ -31,6 +36,12 @@ public class MainController {
     private TabPane tabs;
     @FXML
     private Client client;
+    @FXML
+    public TextField nbMessagesEnvoyes;
+
+
+    int nbMessageSend = 0;
+
 
     public MainController(){
         client = new Client();
@@ -41,21 +52,28 @@ public class MainController {
     }
 
 
-    //method to tell the client how we'll write in the textbox, used by the client who's listenning.
+    /* ---------- Méthode d'écriture du texte du message envoyé dans le channel ---------- */
+    //Utilisé par le client qui écoute
+
     public Void showText(String channel, String sender, String content){
-        //On append pour le tab ouverte mais aussi toutes les tabs ouvertes
-        //      -> On peux avoir plusieurs tabs lié au même chan ouvertes en même temps
+        //On append pour le tab ouvert mais aussi toutes les tabs ouverts
+        //On peut avoir plusieurs tabs liés au même channel ouverts en même temps
         FilteredList<Tab> similarTabs = tabs.getTabs().filtered(e -> e.getText().equals(channel));
         similarTabs.forEach(tab ->
                 ((TextArea)tab.getContent()).appendText(new Date().toLocaleString() + " / " + sender + " : " + content + "\n")
         );
         return null;
     }
+
     @FXML
+
+    /* ---------- Envoi du contenu écrit dans le champ message  ---------- */
+
     private void sendText(ActionEvent e){
         client.sendMessage(textInput.getText(), tabs.getSelectionModel().getSelectedItem().getText());
         textInput.clear();
-    }
+
+}
 
     @FXML
 
@@ -101,7 +119,7 @@ public class MainController {
                 String channelNameEntree = joinChannelModalController.getChannelName();
                 TypesChannel channelTypeEntree = joinChannelModalController.getChannelType();
                 tabs.getSelectionModel().getSelectedItem().setText(channelNameEntree);//on change le nom du tab actuel
-                tabs.getSelectionModel().getSelectedItem().getContent().setOnMouseClicked(null);//on veux pouvoir faire ca qu'une fois
+                tabs.getSelectionModel().getSelectedItem().getContent().setOnMouseClicked(null);//on veut pouvoir faire ca qu'une fois
                 client.joinChannel(channelNameEntree, channelTypeEntree);
             }
         }
@@ -142,6 +160,21 @@ public class MainController {
 
     @FXML
 
+    /* ---------- Ouverture de la fenêtre de stats ---------- */
+
+    private void showStats(ActionEvent event){
+        try{
+            Parent rootStats = FXMLLoader.load(getClass().getResource("../views/Stats.fxml"));
+            Stage statsStage = new Stage();
+            statsStage.setTitle("Statistiques");
+            statsStage.setScene(new Scene(rootStats));
+            statsStage.show();
+        }
+        catch(Exception e){}
+    }
+
+    @FXML
+
     /* ---------- Fermeture de la fenêtre ---------- */
 
     public void shutdown(WindowEvent e){
@@ -150,4 +183,6 @@ public class MainController {
         Platform.exit();
         System.out.println("exiting...");
     }
+
+    
 }

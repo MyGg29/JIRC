@@ -125,6 +125,15 @@ public class Client{
         send(d.toJson());
 
     }
+
+    public void sendToStats(String content, String stat) {
+        Document d = new Document();
+        d.put("Type", "STATS");
+        d.put("Content", content);
+        d.put("Stat", stat);
+        send(d.toJson());
+    }
+
     //Permet de donner à la classe un comportement exterieur quand un message arrive sur le stream
     public void setShowMessage(Function<String,String,String,Void> showMessageFunction){
         this.showMessage = showMessageFunction;

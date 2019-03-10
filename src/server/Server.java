@@ -39,6 +39,10 @@ public class Server {
     }
 }
 
+
+/* ---------------------------------------- Class Socket ---------------------------------------- */
+
+
 class SSocket implements Runnable {
     private Socket socket;
     private User userData = new User();
@@ -61,7 +65,7 @@ class SSocket implements Runnable {
 
                 /* ---------- Réception des données en UTF-16 ---------- */
                 line = userData.getInputStream().readUTF();
-                System.out.println("Received from " + userData.getSocketAddress() + " : " + line);
+                System.out.println("Emetteur : " + userData.getSocketAddress() + " : " + line);
                 //parsing of the JSON
                 Document messageRecu = Document.parse(line);
                 messageRecu.put("Sender", userData.getSocketAddress().toString());
@@ -123,7 +127,7 @@ class SSocket implements Runnable {
                 if(messageRecu.get("Type").equals("LOGIN")){
 
                 }
-                System.out.println("waiting for the next line....");
+                System.out.println("En attente de la prochaine ligne...");
 
             }
         }
@@ -132,7 +136,7 @@ class SSocket implements Runnable {
             //mainChannel.remove(userData.getSocketAddress());
             userData.getChannels().forEach(channel -> channel.getUserList().remove(userData));
             e.printStackTrace();
-            System.out.println("Deleting connection...");
+            System.out.println("Fermeture de l'instance...");
         }
         catch (IllegalArgumentException e){
 
