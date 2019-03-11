@@ -32,7 +32,8 @@ public class Client{
             dIn = new DataInputStream(in);
             dOut = new DataOutputStream(out);
 
-            Thread listen = new Thread(this::listen); //Listen to messages the server may send
+            /* ---------- Thread d'écoute ---------- */
+            Thread listen = new Thread(this::listen);
             listen.start();
         }
         catch (Exception e) { }
@@ -43,17 +44,21 @@ public class Client{
         send(d);
     }
 
+    /* ---------- Rejoindre un channel ---------- */
     public void joinChannel(String channelName, TypesChannel typeChannel){
         Document d = MessagesProtocol.joinMessage(channelName,typeChannel);
         send(d);
     }
 
-    public void getChannelInfo(String channelName){ Document d = new Document();
+    /* ---------- Récupérer infos d'un channel ---------- */
+    public void getChannelInfo(String channelName){
+        Document d = new Document();
         d.put("Type", "INFO");
         d.put("Channel", channelName);
         send(d);
     }
-    // Used to show the message on the screen. The client is always listenning for a server response and show it when it sees something
+
+    /* ---------- Ecoute du serveur et affichage des messages à l'écran ---------- */
     public void listen(){
         while(!exitListenThread){
             try{
@@ -87,6 +92,7 @@ public class Client{
         }
     }
 
+    /* ---------- Fonction d'envoi ---------- */
     private void send(Document d){
         try{
         dOut.writeUTF(d.toJson());
@@ -97,11 +103,13 @@ public class Client{
         }
     }
 
+    /* ---------- Envoi d'un message, sur un channel défini avec horodatage ---------- */
     public void sendMessage(String message, String channel) {
        Document d = MessagesProtocol.normalMessage(channel,message);
        send(d);
     }
 
+    /* ----------  ---------- */
     public void addToWhitelist(String user, String channel){
         Document d = MessagesProtocol.addToWhitelistMessage(user,channel);
         send(d);
@@ -111,6 +119,9 @@ public class Client{
     public void setShowMessage(Function4Args<String,String,String,Void> showMessageFunction){
         this.showMessage = showMessageFunction;
     }
+
+
+    /* ---------- Arret ---------- */
 
     public void shutdown(){
         try{
