@@ -11,7 +11,7 @@
       <Button fx:id="validBtn" defaultButton="true" layoutX="27.0" layoutY="117.0" mnemonicParsing="false" onAction="#validDialog" prefHeight="31.0" prefWidth="157.0" text="Valider" />
       <Label layoutX="26.0" layoutY="32.0" text="Entrer l'invitation" />
       <ChoiceBox fx:id="channelType" layoutX="171.0" layoutY="70.0" prefHeight="31.0" prefWidth="187.0" />
-      <TextField fx:id="channelName" layoutX="171.0" layoutY="27.0" promptText="Main" />
+      <TextField fx:id="channelName" layoutX="171.0" layoutY="27.0" promptText="Nom du channel" />
       <Button fx:id="cancelBtn" cancelButton="true" layoutX="201.0" layoutY="117.0" mnemonicParsing="false" onAction="#cancelDialog" prefHeight="31.0" prefWidth="157.0" text="Annuler" />
       <Label layoutX="28.0" layoutY="75.0" text="Type du channel" />
    </children>

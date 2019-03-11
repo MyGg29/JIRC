@@ -115,6 +115,15 @@ public class Client{
         send(d);
 
     }
+
+    public void sendToStats(String content, String stat) {
+        Document d = new Document();
+        d.put("Type", "STATS");
+        d.put("Content", content);
+        d.put("Stat", stat);
+        send(d);
+    }
+
     //Permet de donner à la classe un comportement exterieur quand un message arrive sur le stream
     public void setShowMessage(Function4Args<String,String,String,Void> showMessageFunction){
         this.showMessage = showMessageFunction;

@@ -55,7 +55,7 @@
                        <tabs>
                            <Tab text="Général">
                                <content>
-                                   <TextArea fx:id="chatBox1" editable="false" onScroll="#onScrollTextArea" wrapText="true" />
+                                   <TextArea fx:id="chatBox1" editable="false" wrapText="true" />
                                </content>
                            </Tab>
                            <Tab onSelectionChanged="#addTab" text="+">
@@ -69,6 +69,7 @@
                   <Font size="23.0" />
                </font>
             </Label>
+            <Button fx:id="stats" mnemonicParsing="false" onAction="#showStats" prefHeight="26.0" prefWidth="72.0" text="Stats" GridPane.columnIndex="2" GridPane.columnSpan="2" />
                </children>
             </GridPane>
       

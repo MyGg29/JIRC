@@ -1,5 +1,7 @@
 package client.controllers;
 
+import com.sun.deploy.util.FXLoader;
+import com.sun.org.glassfish.external.statistics.Stats;
 import javafx.scene.Node;
 import javafx.scene.input.ScrollEvent;
 import javafx.stage.Modality;
@@ -18,7 +20,11 @@ import javafx.stage.WindowEvent;
 import models.TypesChannel;
 import util.ISODate;
 
+import javax.swing.JTextField;
+
 import java.io.IOException;
+
+import static javafx.geometry.Pos.CENTER;
 
 
 public class MainController {
@@ -29,6 +35,12 @@ public class MainController {
     @FXML
     private TabPane tabs;
     private Client client;
+    @FXML
+    public TextField nbMessagesEnvoyes;
+
+
+    int nbMessageSend = 0;
+
 
     public MainController(){
 
@@ -41,10 +53,12 @@ public class MainController {
 
     }
 
-    //method to tell the client how we'll write in the textbox, used by the client who's listenning.
+    /* ---------- Méthode d'écriture du texte du message envoyé dans le channel ---------- */
+    //Utilisé par le client qui écoute
+
     public Void showText(String channel, String sender, String content){
-        //On append pour le tab ouverte mais aussi toutes les tabs ouvertes
-        //      -> On peux avoir plusieurs tabs lié au même chan ouvertes en même temps
+        //On append pour le tab ouvert mais aussi toutes les tabs ouverts
+        //On peut avoir plusieurs tabs liés au même channel ouverts en même temps
         FilteredList<Tab> similarTabs = tabs.getTabs().filtered(e -> e.getText().equals(channel));
         ISODate now = new ISODate();
         //show the message in every tabs. Asking the platform runLater helps when there are many calls (when writting the history for exemple)
@@ -104,7 +118,7 @@ public class MainController {
                 String channelNameEntree = joinChannelModalController.getChannelName();
                 TypesChannel channelTypeEntree = joinChannelModalController.getChannelType();
                 tabs.getSelectionModel().getSelectedItem().setText(channelNameEntree);//on change le nom du tab actuel
-                tabs.getSelectionModel().getSelectedItem().getContent().setOnMouseClicked(null);//on veux pouvoir faire ca qu'une fois
+                tabs.getSelectionModel().getSelectedItem().getContent().setOnMouseClicked(null);//on veut pouvoir faire ca qu'une fois
                 client.joinChannel(channelNameEntree, channelTypeEntree);
             }
         }
@@ -113,9 +127,9 @@ public class MainController {
         }
     }
 
-    @FXML
 
     /* ---------- Ouverture de la fenêtre de paramètres ---------- */
+    @FXML
     private void showChannelParameters(ActionEvent event){
         try{
             FXMLLoader loaderParameters = new FXMLLoader(getClass().getResource("../views/ChannelParameters.fxml"));//
@@ -131,16 +145,23 @@ public class MainController {
             e.printStackTrace();
         }
     }
+
+    /* ---------- Ouverture de la fenêtre de stats ---------- */
     @FXML
-    private void onScrollTextArea(ScrollEvent event){
-        TextArea textArea = (TextArea)event.getSource();
-        int direction = (int) Math.round(event.getDeltaY());
-        //textArea.setScrollTop(textArea.getScrollTop() + direction);
+    private void showStats(ActionEvent event){
+        try{
+            Parent rootStats = FXMLLoader.load(getClass().getResource("../views/Stats.fxml"));
+            Stage statsStage = new Stage();
+            statsStage.setTitle("Statistiques");
+            statsStage.setScene(new Scene(rootStats));
+            statsStage.show();
+        }
+        catch(Exception e){}
     }
 
-    @FXML
 
     /* ---------- Fermeture de la fenêtre ---------- */
+    @FXML
     public void shutdown(WindowEvent e){
         //cleanup what's needed
         client.shutdown();

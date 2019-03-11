@@ -8,14 +8,13 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controllers.ConnexionController">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
    <children>
-      <Button fx:id="connexionBtn" layoutX="177.0" layoutY="333.0" mnemonicParsing="false" onAction="#clickConnexion" prefHeight="31.0" prefWidth="246.0" text="Connexion" />
+      <Button fx:id="connexionBtn" layoutX="177.0" layoutY="321.0" mnemonicParsing="false" onAction="#clickConnexion" prefHeight="31.0" prefWidth="246.0" text="Connexion" />
       <TextField fx:id="identifiant" layoutX="177.0" layoutY="202.0" prefHeight="31.0" prefWidth="246.0" promptText="Identifiant" />
       <Label layoutX="128.0" layoutY="158.0" text="Veuillez vous identifier pour accéder à la messagerie" />
       <PasswordField fx:id="password" layoutX="178.0" layoutY="265.0" prefHeight="31.0" onAction="#clickConnexion" prefWidth="246.0" promptText="Mot de passe" />
