@@ -19,7 +19,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Client client = new Client();
 
-        //init main window
+        /* ---------- Initialisation de la fenêtre principale ---------- */
         FXMLLoader loader = new FXMLLoader(getClass().getResource("views/Client.fxml"));
         final Parent root = loader.load();
         MainController mainController = loader.getController();
@@ -31,7 +31,7 @@ public class Main extends Application {
         scene.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
         primaryStage.show();
 
-        //Init the connexion window
+        /* ---------- Initialisation de la fenêtre de connexion ---------- */
         FXMLLoader loaderConnexion = new FXMLLoader(getClass().getResource("views/Connexion.fxml"));//
         final Parent rootConnexion = loaderConnexion.load();//
         ConnexionController connexionController = loaderConnexion.getController();

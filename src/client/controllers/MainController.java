@@ -47,8 +47,11 @@ public class MainController {
         //      -> On peux avoir plusieurs tabs lié au même chan ouvertes en même temps
         FilteredList<Tab> similarTabs = tabs.getTabs().filtered(e -> e.getText().equals(channel));
         ISODate now = new ISODate();
-        similarTabs.forEach(tab ->
-                ((TextArea)tab.getContent()).appendText(now + " / " + sender + " : " + content + "\n")
+        //show the message in every tabs. Asking the platform runLater helps when there are many calls (when writting the history for exemple)
+        Platform.runLater(()->
+                similarTabs.forEach(tab ->
+                        ((TextArea)tab.getContent()).appendText(now + " / " + sender + " : " + content + "\n")
+                )
         );
         return null;
     }
@@ -60,6 +63,8 @@ public class MainController {
     }
 
     @FXML
+
+    /* ---------- Création d'un nouvel onglet ---------- */
     private void addTab(){
         try{
             System.out.println("Adding a tab...");
@@ -79,6 +84,8 @@ public class MainController {
     }
 
     @FXML
+
+    /* ---------- Ouverture de la fenêtre d'accès à un channel ---------- */
     private void showJoinChannel (MouseEvent event) {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/JoinChannel.fxml"));
@@ -107,6 +114,8 @@ public class MainController {
     }
 
     @FXML
+
+    /* ---------- Ouverture de la fenêtre de paramètres ---------- */
     private void showChannelParameters(ActionEvent event){
         try{
             FXMLLoader loaderParameters = new FXMLLoader(getClass().getResource("../views/ChannelParameters.fxml"));//
@@ -130,6 +139,8 @@ public class MainController {
     }
 
     @FXML
+
+    /* ---------- Fermeture de la fenêtre ---------- */
     public void shutdown(WindowEvent e){
         //cleanup what's needed
         client.shutdown();
