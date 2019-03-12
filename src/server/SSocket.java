@@ -75,9 +75,9 @@ class SSocket implements Runnable {
                 if(messageRecu.get("Type").equals("MESSAGE")){
 
                     Channel channel = Channel.everyChannels.get(messageRecu.get("Channel",String.class));
-                    Document messageToShare = MessagesProtocol.normalMessage(messageRecu,userData.getSocketAddress().toString(),userData.getName());
-                    channel.sendToChannel(messageToShare.toJson());
-                    database.getCollection("messages").insertOne(messageRecu);
+                    Document messageAPartager = MessagesProtocol.normalMessage(messageRecu,userData.getSocketAddress().toString(),userData.getName());
+                    channel.sendToChannel(messageAPartager.toJson());
+                    database.getCollection("messages").insertOne(messageAPartager);
                 }
 
                 /* ---------- Information sur le channel ---------- */
