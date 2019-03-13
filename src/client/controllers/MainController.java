@@ -1,9 +1,8 @@
 package client.controllers;
 
-import com.sun.deploy.util.FXLoader;
-import com.sun.org.glassfish.external.statistics.Stats;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.input.ScrollEvent;
 import javafx.stage.Modality;
 import models.Client;
 import javafx.application.Platform;
@@ -20,11 +19,11 @@ import javafx.stage.WindowEvent;
 import models.TypesChannel;
 import util.ISODate;
 
-import javax.swing.JTextField;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
-import static javafx.geometry.Pos.CENTER;
+import static java.util.stream.Collectors.toList;
 
 
 public class MainController {
@@ -35,14 +34,24 @@ public class MainController {
     @FXML
     private TabPane tabs;
     private Client client;
-    @FXML
-    public TextField nbMessagesEnvoyes;
 
+    private Stage statsStage;
 
-    int nbMessageSend = 0;
+    StatsController statsController;
+
 
 
     public MainController(){
+        try{
+            FXMLLoader loaderStats = new FXMLLoader(getClass().getResource("../views/Stats.fxml"));//
+            final Parent rootStats= loaderStats.load();//
+            statsController = loaderStats.getController();
+            statsStage = new Stage();
+            statsStage.setTitle("Statistiques");
+            statsStage.setScene(new Scene(rootStats));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
 
     }
     public void initialize(){
@@ -72,13 +81,18 @@ public class MainController {
 
     @FXML
     private void sendMessage(ActionEvent e){
-        client.sendMessage(textInput.getText(), tabs.getSelectionModel().getSelectedItem().getText());
+        client.sendNormalMessage(textInput.getText(), tabs.getSelectionModel().getSelectedItem().getText());
         textInput.clear();
+        if(statsController!=null){
+            statsController.incrementNbMessagesEnvoyes();
+        }
+
     }
 
-    @FXML
+
 
     /* ---------- Création d'un nouvel onglet ---------- */
+    @FXML
     private void addTab(){
         try{
             System.out.println("Adding a tab...");
@@ -97,9 +111,10 @@ public class MainController {
         }
     }
 
-    @FXML
+
 
     /* ---------- Ouverture de la fenêtre d'accès à un channel ---------- */
+    @FXML
     private void showJoinChannel (MouseEvent event) {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/JoinChannel.fxml"));
@@ -137,9 +152,16 @@ public class MainController {
             ParametersController parametresController = loaderParameters.getController();
             Stage stage = new Stage();
             parametresController.setClient(client);
+            ObservableList<String> opennedTabName = tabs.getTabs().stream()
+                                                                .filter(tab -> !tab.getText().equals("+"))
+                                                                .map(Tab::getText)
+                                                                .collect(Collectors.collectingAndThen(toList(), l -> FXCollections.observableArrayList(l)));
+            parametresController.setChannelList(opennedTabName);
             stage.setTitle("Channel Parameters");
             stage.setScene(new Scene(rootParameters));
             stage.show();
+            client.updateUserList("Général");
+
         }
         catch(Exception e){
             e.printStackTrace();
@@ -149,14 +171,7 @@ public class MainController {
     /* ---------- Ouverture de la fenêtre de stats ---------- */
     @FXML
     private void showStats(ActionEvent event){
-        try{
-            Parent rootStats = FXMLLoader.load(getClass().getResource("../views/Stats.fxml"));
-            Stage statsStage = new Stage();
-            statsStage.setTitle("Statistiques");
-            statsStage.setScene(new Scene(rootStats));
-            statsStage.show();
-        }
-        catch(Exception e){}
+        statsStage.show();
     }
 
 

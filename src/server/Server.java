@@ -1,6 +1,8 @@
 package server;
 
+import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCommandException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -43,5 +45,6 @@ public class Server {
             e.printStackTrace();
         }
     }
+
 }
 

@@ -6,10 +6,13 @@ import models.TypesChannel;
 import org.bson.Document;
 import util.MessagesProtocol;
 
+import javax.print.Doc;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -103,8 +106,6 @@ class SSocket implements Runnable {
                 else{
                     userData.anwserConnectionAttempt(false);
                 }
-
-
             }
 
         }catch(IOException e){
@@ -113,23 +114,24 @@ class SSocket implements Runnable {
     }
 
     private void handleParams(Document messageRecu) {
-        String userName = messageRecu.get("UserName", String.class);
-        String channel = messageRecu.get("Channel", String.class);
-        User user = new User();
-        user.setName(userName);
-        Channel.everyChannels.get(channel).addUserToWhiteList(user);
-        database.getCollection("params").insertOne(messageRecu);
+        if(messageRecu.get("TypeParams").equals("WhitelistUser")){
+            String userName = messageRecu.get("UserName", String.class);
+            String channel = messageRecu.get("Channel", String.class);
+            User user = new User();
+            user.setName(userName);
+            Channel.everyChannels.get(channel).addUserToWhiteList(user);
+            database.getCollection("params").insertOne(messageRecu);
+        }
     }
 
     private void handleInfo(Document messageRecu) {
         try{
-            String channelRequested = messageRecu.get("Channel",String.class);
-            Channel channel = Channel.everyChannels.get(channelRequested);
-            TypesChannel e = channel.type;
-            Document d = new Document();
-            d.put("Type", "INFO");
-            d.put("TypeChannel", e.toString());
-            userData.send(d.toJson());
+            if(messageRecu.get("TypeInfo").equals("getUserList")){
+                String channel = messageRecu.get("Channel",String.class);
+                List<String> userNameList = Channel.everyChannels.get(channel).getUserList().stream().map(User::getName).collect(Collectors.toList());
+                Document d = MessagesProtocol.userList(userNameList);
+                userData.send(d.toJson());
+            }
         }catch (IOException e){
             e.printStackTrace();
         }

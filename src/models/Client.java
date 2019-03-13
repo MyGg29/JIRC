@@ -1,5 +1,7 @@
 package models;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.bson.Document;
 import util.Function4Args;
 import util.MessagesProtocol;
@@ -8,17 +10,15 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.List;
 import java.util.function.Function;
 
 public class Client{
-    private volatile boolean exitListenThread = false;
     private DataInputStream dIn;
     private DataOutputStream dOut;
+    private ClientListener clientListener;
     private int serverPort = 666;
     private int clientPort = 0;
-    private Function4Args<String,String,String, Void> showMessage;
-    private Function<Boolean,Void> connexionCallback;
-
 
     public Client(){
         try {
@@ -33,7 +33,8 @@ public class Client{
             dOut = new DataOutputStream(out);
 
             /* ---------- Thread d'écoute ---------- */
-            Thread listen = new Thread(this::listen);
+            clientListener = new ClientListener(dIn);
+            Thread listen = new Thread(clientListener);
             listen.start();
         }
         catch (Exception e) { }
@@ -44,78 +45,44 @@ public class Client{
         send(d);
     }
 
-    /* ---------- Rejoindre un channel ---------- */
+    /**
+     * Permet au client de se connecter à un autre channel
+     * @param channelName le nom du channel, peut être n'importe quoi
+     * @param typeChannel le type du channel, faisant partie de l'enum TypeChannel
+     */
     public void joinChannel(String channelName, TypesChannel typeChannel){
         Document d = MessagesProtocol.joinMessage(channelName,typeChannel);
         send(d);
     }
 
-    /* ---------- Récupérer infos d'un channel ---------- */
-    public void getChannelInfo(String channelName){
-        Document d = new Document();
-        d.put("Type", "INFO");
-        d.put("Channel", channelName);
-        send(d);
-    }
-
-    /* ---------- Ecoute du serveur et affichage des messages à l'écran ---------- */
-    public void listen(){
-        while(!exitListenThread){
-            try{
-                String line = dIn.readUTF();
-                System.out.println("Line Sent back by the server---" + line);
-                Document messageRecu = Document.parse(line);
-
-                if(messageRecu.get("Type").equals("MESSAGE")){
-                    showMessage.apply(messageRecu.get("Channel",String.class),
-                            messageRecu.get("SenderName", String.class),
-                            messageRecu.get("Content", String.class));
-                }
-                if(messageRecu.get("Type").equals("INFO")){
-
-                }
-                if(messageRecu.get("Type").equals("LOGIN")){
-                    if(messageRecu.get("Response").equals("Ok")){
-                        connexionCallback.apply(true);
-                    }
-                    else{
-                        connexionCallback.apply(false);
-                    }
-                }
-            } catch (SocketException e){
-                e.printStackTrace();
-                System.out.println("Closing listenning thread...");
-                this.exitListenThread = true;
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /* ---------- Fonction d'envoi ---------- */
-    private void send(Document d){
-        try{
-        dOut.writeUTF(d.toJson());
-        dOut.flush();
-        }catch(IOException e){
-            System.out.println("FATAL ERROR SENDING A MESSAGE");
-            e.printStackTrace();
-        }
-    }
-
-    /* ---------- Envoi d'un message, sur un channel défini avec horodatage ---------- */
-    public void sendMessage(String message, String channel) {
+    /**
+     * Envoi un message sur un channel spécifique
+     * @param message le message a partager
+     * @param channel le channel ou partager le message
+     */
+    public void sendNormalMessage(String message, String channel) {
        Document d = MessagesProtocol.normalMessage(channel,message);
        send(d);
     }
 
-    /* ----------  ---------- */
+    /* ---------- Add a user to the whitelist of a private/group channel ---------- */
+
+    /**
+     * Ajoute un utilisateur à la whitelist d'un channel privée/groupé pour qu'il puisse le rejoindre
+     * @param user le nom de l'utilisateur à ajouter
+     * @param channel le channel ou ajouter cet utilisateur
+     */
     public void addToWhitelist(String user, String channel){
         Document d = MessagesProtocol.addToWhitelistMessage(user,channel);
         send(d);
 
     }
 
+    /**
+     *
+     * @param content
+     * @param stat
+     */
     public void sendToStats(String content, String stat) {
         Document d = new Document();
         d.put("Type", "STATS");
@@ -124,14 +91,40 @@ public class Client{
         send(d);
     }
 
-    //Permet de donner à la classe un comportement exterieur quand un message arrive sur le stream
-    public void setShowMessage(Function4Args<String,String,String,Void> showMessageFunction){
-        this.showMessage = showMessageFunction;
+    /**
+     * Envoie n'importe quoi au serveur. Methode privé qui permet de rajouter un niveau d'abstraction
+     * @param d le Document a envoyer
+     */
+    private void send(Document d){
+        try{
+            dOut.writeUTF(d.toJson());
+            dOut.flush();
+        }catch(IOException e){
+            System.out.println("FATAL ERROR SENDING A MESSAGE");
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Permet de donner le comportement du ClientListener (ce qui écoute les messages du server)
+     * quand le ClientListener recoit un message
+     * @param showMessageFunction la fonction qui explique comment afficher le message
+     */
+    public void setShowMessage(Function4Args<String,String,String,Void> showMessageFunction){
+        this.clientListener.showMessage = showMessageFunction;
+    }
 
-    /* ---------- Arret ---------- */
+    public void setConnexionCallback(Function<Boolean,Void> connexionCallback) {
+        this.clientListener.connexionCallback = connexionCallback;
+    }
 
+    public void setUserlistCallback(Function<ObservableList<String>, Void> usernameList) {
+        this.clientListener.userlistCallback = usernameList;
+    }
+
+    /**
+     * permet de fermer proprement les connexions entre le client et le serveur.
+     */
     public void shutdown(){
         try{
             dIn.close();
@@ -139,10 +132,18 @@ public class Client{
         }
         catch (IOException e){
             System.out.println("Problem closing the server socket");
+            dIn = null; //we let the garbage collector handle this
+            dOut = null;
         }
-        finally {
+    }
 
-        }
+    /**
+     * Demande au serveur de m'envoyer la liste des utilsateurs connecté actuellement sur le channel
+     * @param channel le channel dont on souhaite l'info
+     */
+    public void updateUserList(String channel) {
+        Document d = MessagesProtocol.getUserList(channel);
+        send(d);
     }
 
     public int getClientPort() {
@@ -153,16 +154,5 @@ public class Client{
         this.clientPort = clientPort;
     }
 
-    public void connectionCallback() {
-
-    }
-
-    public Function<Boolean, Void> getConnexionCallback() {
-        return connexionCallback;
-    }
-
-    public void setConnexionCallback(Function<Boolean,Void> connexionCallback) {
-        this.connexionCallback = connexionCallback;
-    }
 }
 

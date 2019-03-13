@@ -2,9 +2,15 @@ package util;
 
 import models.TypesChannel;
 import org.bson.Document;
+import server.User;
 
+import javax.print.Doc;
 import java.util.Date;
+import java.util.List;
 
+/**
+ * Acts like a DocumentFactory
+ */
 public class MessagesProtocol {
     public static Document loginMessage(String name, String password){
         Document d = new Document();
@@ -48,8 +54,23 @@ public class MessagesProtocol {
     public static Document addToWhitelistMessage(String user, String channel){
         Document d = new Document();
         d.put("Type", "PARAMS");
+        d.put("TypeParams", "WhitelistUser");
         d.put("UserName", user);
         d.put("Channel", channel);
+        return d;
+    }
+    public static Document getUserList(String channel){
+        Document d = new Document();
+        d.put("Type", "INFO");
+        d.put("TypeInfo","getUserList");
+        d.put("Channel",channel);
+        return d;
+    }
+    public static Document userList(List<String> userNamelist){
+        Document d = new Document();
+        d.put("Type", "INFO");
+        d.put("TypeInfo","userList");
+        d.put("userNameList",userNamelist);
         return d;
     }
 
