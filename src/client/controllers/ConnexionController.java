@@ -32,7 +32,10 @@ public class ConnexionController {
         client.connect(identifiant.getText(),password.getText());
     }
 
-    //function handling what happens after Client.cs receive a response for the connexion attemps
+    /**
+     * Function handling what happens after Client.cs receive a response for the connexion attemps
+     * @param connected is the connection attempt successful ?
+     */
     private Void handleAfterConnexion(boolean connected){
         if(connected){
             Stage connexionStage = (Stage)identifiant.getScene().getWindow();

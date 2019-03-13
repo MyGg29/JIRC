@@ -18,21 +18,22 @@ import static com.mongodb.client.model.Filters.eq;
 //This is the main socket of the server, each user has one instance of this class running on the server
 class SSocket implements Runnable {
     private Socket socket;
-    private User userData = new User();
+    private User userData;
     MongoDatabase database;
 
     public SSocket(Socket socket, MongoDatabase jIrcDatabase) throws IOException {
         this.socket = socket;
+        userData =  new User();
         userData.setOutputStream(new DataOutputStream(this.socket.getOutputStream()));
         userData.setInputStream(new DataInputStream(this.socket.getInputStream()));
         userData.setSocketAddress(this.socket.getRemoteSocketAddress());
-        userData.setName("DefaultName (temporary)");
+        userData.setName("DefaultName");
         this.database = jIrcDatabase;
     }
 
     @Override
     public void run() {
-        try {
+        try{
             String line;
             while (true) {
 
@@ -45,104 +46,129 @@ class SSocket implements Runnable {
 
                 /* ---------- Rejoindre un channel ---------- */
                 if(messageRecu.get("Type").equals("JOIN")){
-
-                    String nomChannel = messageRecu.get("Channel",String.class);
-                    if(Channel.everyChannels.containsKey(nomChannel)){
-                        if(Channel.everyChannels.get(nomChannel).isAllowedToJoin(userData)){
-                            Channel.everyChannels.get(nomChannel).getUserList().add(userData);
-                            userData.getChannels().add(Channel.everyChannels.get(nomChannel));
-                            sendHistory(userData,nomChannel);
-                        }
-                        else{
-                            Document d = MessagesProtocol.normalMessage(nomChannel,"Tu n'as pas le droit d'entrer dans ce channel","", "System");
-                            userData.send(d.toJson());//Not allowed to join
-                        }
-                    }
-                    else{
-                        Channel mainChannel = new Channel();
-                        mainChannel.name = nomChannel;
-                        mainChannel.type = TypesChannel.valueOf(messageRecu.get("TypeChannel", String.class));
-                        Channel.everyChannels.put(nomChannel, mainChannel);
-                        Channel.everyChannels.get(nomChannel).getUserList().add(userData);
-                        userData.getChannels().add(Channel.everyChannels.get(nomChannel));
-                        sendHistory(userData,nomChannel);
-                    }
-                    database.getCollection("join").insertOne(messageRecu);
+                    this.handleJoinChannel(messageRecu);
                 }
-
 
                 /* ---------- Affichage du message reçu dans le channel concerné ---------- */
                 if(messageRecu.get("Type").equals("MESSAGE")){
-
-                    Channel channel = Channel.everyChannels.get(messageRecu.get("Channel",String.class));
-                    Document messageAPartager = MessagesProtocol.normalMessage(messageRecu,userData.getSocketAddress().toString(),userData.getName());
-                    channel.sendToChannel(messageAPartager.toJson());
-                    database.getCollection("messages").insertOne(messageAPartager);
+                    this.handleNormalMessage(messageRecu);
                 }
 
                 /* ---------- Information sur le channel ---------- */
                 if(messageRecu.get("Type").equals("INFO")){
-                    String channelRequested = messageRecu.get("Channel",String.class);
-                    Channel channel = Channel.everyChannels.get(channelRequested);
-                    TypesChannel e = channel.type;
-                    Document d = new Document();
-                    d.put("Type", "INFO");
-                    d.put("TypeChannel", e.toString());
-                    userData.send(d.toJson());
+                    this.handleInfo(messageRecu);
                 }
 
                 /* ---------- Paramètres ---------- */
                 if(messageRecu.get("Type").equals("PARAMS")){
-                    String userName = messageRecu.get("UserName", String.class);
-                    String channel = messageRecu.get("Channel", String.class);
-                    User user = new User();
-                    user.setName(userName);
-                    Channel.everyChannels.get(channel).addUserToWhiteList(user);
-                    database.getCollection("params").insertOne(messageRecu);
+                    this.handleParams(messageRecu);
                 }
 
                 /* ---------- Connexion ---------- */
                 if(messageRecu.get("Type").equals("LOGIN")){
-                    String name = messageRecu.get("Name",String.class);
-                    String password = messageRecu.get("Password", String.class);
-
-                    Document storedUser = database.getCollection("users").find(eq("Name",name)).first();
-                    if(storedUser == null){
-                        //user dont exist yet, we insert it in the database
-                        Document d = new Document();
-                        d.put("Name", name);
-                        d.put("Password", password);
-                        database.getCollection("users").insertOne(d);
-                        userData.setName(name);
-                        userData.anwserConnectionAttempt(true);
-                    }
-                    else{
-                        //user exists, we check if the password sent by the client correspond to what's in the database
-                        if(storedUser.get("Password",String.class).equals(password)){
-                            userData.setName(name);
-                            userData.anwserConnectionAttempt(true);
-                        }
-                        else{
-                            userData.anwserConnectionAttempt(false);
-                        }
-
-
-                    }
+                    this.handleLogin(messageRecu);
                 }
                 System.out.println("waiting for the next line....");
 
             }
         }
         catch (IOException e) {
-            //when a connection is closed
-            //mainChannel.remove(userData.getSocketAddress());
             userData.getChannels().forEach(channel -> channel.getUserList().remove(userData));
             e.printStackTrace();
             System.out.println("Deleting connection...");
         }
-        catch (IllegalArgumentException e){
+    }
 
+    private void handleLogin(Document messageRecu) {
+        try{
+            String name = messageRecu.get("Name",String.class);
+            String password = messageRecu.get("Password", String.class);
+
+            Document storedUser = database.getCollection("users").find(eq("Name",name)).first();
+            if(storedUser == null){
+                //user dont exist yet, we insert it in the database
+                Document d = new Document();
+                d.put("Name", name);
+                d.put("Password", password);
+                database.getCollection("users").insertOne(d);
+                userData.setName(name);
+                userData.anwserConnectionAttempt(true);
+            }
+            else{
+                //user exists, we check if the password sent by the client correspond to what's in the database
+                if(storedUser.get("Password",String.class).equals(password)){
+                    userData.setName(name);
+                    userData.anwserConnectionAttempt(true);
+                }
+                else{
+                    userData.anwserConnectionAttempt(false);
+                }
+
+
+            }
+
+        }catch(IOException e){
+            e.printStackTrace();
         }
+    }
+
+    private void handleParams(Document messageRecu) {
+        String userName = messageRecu.get("UserName", String.class);
+        String channel = messageRecu.get("Channel", String.class);
+        User user = new User();
+        user.setName(userName);
+        Channel.everyChannels.get(channel).addUserToWhiteList(user);
+        database.getCollection("params").insertOne(messageRecu);
+    }
+
+    private void handleInfo(Document messageRecu) {
+        try{
+            String channelRequested = messageRecu.get("Channel",String.class);
+            Channel channel = Channel.everyChannels.get(channelRequested);
+            TypesChannel e = channel.type;
+            Document d = new Document();
+            d.put("Type", "INFO");
+            d.put("TypeChannel", e.toString());
+            userData.send(d.toJson());
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void handleJoinChannel(Document messageRecu){
+        try{
+            String nomChannel = messageRecu.get("Channel",String.class);
+            if(Channel.everyChannels.containsKey(nomChannel)){
+                if(Channel.everyChannels.get(nomChannel).isAllowedToJoin(userData)){
+                    Channel.everyChannels.get(nomChannel).getUserList().add(userData);
+                    userData.getChannels().add(Channel.everyChannels.get(nomChannel));
+                    sendHistory(userData,nomChannel);
+                }
+                else{
+                    Document d = MessagesProtocol.normalMessage(nomChannel,"Tu n'as pas le droit d'entrer dans ce channel","", "System");
+                    userData.send(d.toJson());//Not allowed to join
+                }
+            }
+            else{
+                Channel mainChannel = new Channel();
+                mainChannel.name = nomChannel;
+                mainChannel.type = TypesChannel.valueOf(messageRecu.get("TypeChannel", String.class));
+                Channel.everyChannels.put(nomChannel, mainChannel);
+                Channel.everyChannels.get(nomChannel).getUserList().add(userData);
+                userData.getChannels().add(Channel.everyChannels.get(nomChannel));
+                sendHistory(userData,nomChannel);
+            }
+            database.getCollection("join").insertOne(messageRecu);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void handleNormalMessage(Document messageRecu){
+        Channel channel = Channel.everyChannels.get(messageRecu.get("Channel",String.class));
+        Document messageAPartager = MessagesProtocol.normalMessage(messageRecu,userData.getSocketAddress().toString(),userData.getName());
+        channel.sendToChannel(messageAPartager.toJson());
+        database.getCollection("messages").insertOne(messageAPartager);
     }
 
     //Sends the channel history from the database to the user
