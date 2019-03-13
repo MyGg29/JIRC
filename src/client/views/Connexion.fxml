@@ -14,14 +14,15 @@
             <Insets />
          </opaqueInsets>
    <children>
-      <Button fx:id="connexionBtn" layoutX="177.0" layoutY="321.0" mnemonicParsing="false" onAction="#clickConnexion" prefHeight="31.0" prefWidth="246.0" text="Connexion" />
-      <TextField fx:id="identifiant" layoutX="177.0" layoutY="202.0" prefHeight="31.0" prefWidth="246.0" promptText="Identifiant" />
-      <Label layoutX="128.0" layoutY="158.0" text="Veuillez vous identifier pour accéder à la messagerie" />
-      <PasswordField fx:id="password" layoutX="178.0" layoutY="265.0" prefHeight="31.0" onAction="#clickConnexion" prefWidth="246.0" promptText="Mot de passe" />
-      <ImageView fitHeight="118.0" fitWidth="158.0" layoutX="245.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+      <Button fx:id="connexionBtn" layoutX="177.0" layoutY="300.0" mnemonicParsing="false" onAction="#clickConnexion" prefHeight="31.0" prefWidth="246.0" text="Connexion" />
+      <TextField fx:id="identifiant" layoutX="177.0" layoutY="192.0" prefHeight="31.0" prefWidth="246.0" promptText="Identifiant" />
+      <Label layoutX="128.0" layoutY="148.0" text="Veuillez vous identifier pour accéder à la messagerie" />
+      <PasswordField fx:id="password" layoutX="178.0" layoutY="245.0" onAction="#clickConnexion" prefHeight="31.0" prefWidth="246.0" promptText="Mot de passe" />
+      <ImageView fitHeight="118.0" fitWidth="158.0" layoutX="245.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../ressources/logodetoured.png" />
          </image>
       </ImageView>
+      <Button fx:id="inscriptionBtn" layoutX="177.0" layoutY="347.0" mnemonicParsing="false" onAction="#showRegister" prefHeight="31.0" prefWidth="246.0" text="S'inscrire" />
    </children>
       </AnchorPane>

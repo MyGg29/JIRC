@@ -3,24 +3,46 @@ package client.controllers;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import models.Client;
 
+import java.io.IOException;
+
 
 public class ConnexionController {
     @FXML
     Button connexionBtn;
     @FXML
+    Button inscriptionBtn;
+    @FXML
     TextField identifiant;
     @FXML
     TextField password;
 
-    Client client;
-    public ConnexionController(){
 
+    private Stage registerStage;
+    RegisterController registerController;
+
+    Client client;
+
+
+    public ConnexionController(){
+        try{
+            FXMLLoader loaderRegister = new FXMLLoader(getClass().getResource("../views/Register.fxml"));//
+            final Parent rootRegister= loaderRegister.load();//
+            registerController = loaderRegister.getController();
+            registerStage = new Stage();
+            registerStage.setTitle("Inscription");
+            registerStage.setScene(new Scene(rootRegister));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
     public void initialize(){
     }
@@ -30,6 +52,11 @@ public class ConnexionController {
     {
         client.setConnexionCallback(this::handleAfterConnexion);
         client.connect(identifiant.getText(),password.getText());
+    }
+
+    @FXML
+    private void showRegister(ActionEvent event){
+        registerStage.show();
     }
 
     //function handling what happens after Client.cs receive a response for the connexion attemps
@@ -48,7 +75,13 @@ public class ConnexionController {
         return null;
     }
 
+
+
     public void setClient(Client client) {
         this.client = client;
     }
+
+
+    //TODO : authentification utilisateur
+
 }

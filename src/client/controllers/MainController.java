@@ -35,14 +35,24 @@ public class MainController {
     @FXML
     private TabPane tabs;
     private Client client;
-    @FXML
-    public TextField nbMessagesEnvoyes;
 
+    private Stage statsStage;
 
-    int nbMessageSend = 0;
+    StatsController statsController;
+
 
 
     public MainController(){
+        try{
+            FXMLLoader loaderStats = new FXMLLoader(getClass().getResource("../views/Stats.fxml"));//
+            final Parent rootStats= loaderStats.load();//
+            statsController = loaderStats.getController();
+            statsStage = new Stage();
+            statsStage.setTitle("Statistiques");
+            statsStage.setScene(new Scene(rootStats));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
 
     }
     public void initialize(){
@@ -74,11 +84,16 @@ public class MainController {
     private void sendMessage(ActionEvent e){
         client.sendMessage(textInput.getText(), tabs.getSelectionModel().getSelectedItem().getText());
         textInput.clear();
+        if(statsController!=null){
+            statsController.incrementNbMessagesEnvoyes();
+        }
+
     }
 
-    @FXML
+
 
     /* ---------- Création d'un nouvel onglet ---------- */
+    @FXML
     private void addTab(){
         try{
             System.out.println("Adding a tab...");
@@ -97,9 +112,10 @@ public class MainController {
         }
     }
 
-    @FXML
+
 
     /* ---------- Ouverture de la fenêtre d'accès à un channel ---------- */
+    @FXML
     private void showJoinChannel (MouseEvent event) {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/JoinChannel.fxml"));
@@ -149,14 +165,7 @@ public class MainController {
     /* ---------- Ouverture de la fenêtre de stats ---------- */
     @FXML
     private void showStats(ActionEvent event){
-        try{
-            Parent rootStats = FXMLLoader.load(getClass().getResource("../views/Stats.fxml"));
-            Stage statsStage = new Stage();
-            statsStage.setTitle("Statistiques");
-            statsStage.setScene(new Scene(rootStats));
-            statsStage.show();
-        }
-        catch(Exception e){}
+        statsStage.show();
     }
 
 
