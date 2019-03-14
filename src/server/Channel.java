@@ -1,6 +1,7 @@
 package server;
 
 import models.TypesChannel;
+import util.MessagesProtocol;
 
 import java.io.IOException;
 import java.util.*;

@@ -14,7 +14,7 @@ public class User {
     private DataOutputStream outputStream;//Where we write
     private DataInputStream inputStream;//Where we receive
     private SocketAddress socketAddress;
-    private String name;
+    private String name = "Anonyme";
     private SocketAddress ip;
     private List<Channel> channels = new ArrayList<>();
 

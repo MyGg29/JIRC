@@ -19,6 +19,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Client client = new Client();
 
+
+        //On commence en ouvrant 2 fenêtres, la fenetre de connexion et la fenêtre de chat
         /* ---------- Initialisation de la fenêtre principale ---------- */
         FXMLLoader loader = new FXMLLoader(getClass().getResource("views/Client.fxml"));
         final Parent root = loader.load();
