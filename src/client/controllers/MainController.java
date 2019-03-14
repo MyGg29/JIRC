@@ -31,7 +31,7 @@ public class MainController {
     @FXML
     private TextField textInput;
     @FXML
-    private Button send;
+    private Button envoyerBtn;
     @FXML
     private TabPane tabs;
     private Client client;
@@ -81,13 +81,20 @@ public class MainController {
     }
 
     @FXML
-    private void sendMessage(ActionEvent e){
+    private void sendMessage(){
         client.sendMessage(textInput.getText(), tabs.getSelectionModel().getSelectedItem().getText());
         textInput.clear();
         if(statsController!=null){
             statsController.incrementNbMessagesEnvoyes();
         }
 
+    }
+
+    @FXML
+    private void clickEnvoyerBtn(){
+        if(!textInput.getText().isEmpty()){
+            sendMessage();
+        }
     }
 
 

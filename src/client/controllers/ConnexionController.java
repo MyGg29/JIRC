@@ -1,5 +1,7 @@
 package client.controllers;
 
+import client.Main;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +27,6 @@ public class ConnexionController {
     @FXML
     TextField password;
 
-
     private Stage registerStage;
     RegisterController registerController;
 
@@ -40,6 +41,7 @@ public class ConnexionController {
             registerStage = new Stage();
             registerStage.setTitle("Inscription");
             registerStage.setScene(new Scene(rootRegister));
+            registerStage.setResizable(false);
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -74,7 +76,6 @@ public class ConnexionController {
         }
         return null;
     }
-
 
 
     public void setClient(Client client) {
