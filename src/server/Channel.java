@@ -20,7 +20,7 @@ public class Channel {
     public void sendToChannel(String s){
         try{
             for(User user : this.userList){
-                if(isAllowedToJoin(user)){
+                if(isAllowed(user)){
                     user.send(s);
                 }
             }
@@ -31,12 +31,15 @@ public class Channel {
     }
 
 
-    public boolean isAllowedToJoin(User user) {
+    public boolean isAllowed(User user) {
         if(this.type == TypesChannel.PUBLIC){
             return true;
         }
         //Check if the user is in the whitelist so we know if he can join the channel
         if(this.type == TypesChannel.GROUPE || this.type == TypesChannel.PRIVATE){
+            if(this.whiteList.isEmpty()){
+                return true;
+            }
             //filter the whitelist to see if the user is inside
             Optional<User> filteredWhitelist = this.whiteList.stream().filter(whiteListedUser -> user.getName().equals(whiteListedUser.getName()))
                                                              .findFirst();

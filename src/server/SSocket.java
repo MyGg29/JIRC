@@ -4,9 +4,9 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import models.TypesChannel;
 import org.bson.Document;
+import sun.plugin2.main.client.MessagePassingExecutionContext;
 import util.MessagesProtocol;
 
-import javax.print.Doc;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -112,13 +112,19 @@ class SSocket implements Runnable {
         }
     }
 
-    private void handleParams(Document messageRecu) {
+    private void handleParams(Document messageRecu) throws IOException {
         if(messageRecu.get("TypeParams").equals("WhitelistUser")){
             String userName = messageRecu.get("UserName", String.class);
             String channel = messageRecu.get("Channel", String.class);
-            User user = new User();
-            user.setName(userName);
-            Channel.everyChannels.get(channel).addUserToWhiteList(user);
+            User userToAdd = new User();
+            userToAdd.setName(userName);
+            if(Channel.everyChannels.get(channel).isAllowed(userData)){
+                Channel.everyChannels.get(channel).addUserToWhiteList(userToAdd);
+                userData.send(MessagesProtocol.confirmAddUser().toJson());
+            }
+            else{
+                userData.send(MessagesProtocol.errorMessage().toJson());
+            }
             database.getCollection("params").insertOne(messageRecu);
         }
     }
@@ -140,7 +146,7 @@ class SSocket implements Runnable {
         try{
             String nomChannel = messageRecu.get("Channel",String.class);
             if(Channel.everyChannels.containsKey(nomChannel)){
-                if(Channel.everyChannels.get(nomChannel).isAllowedToJoin(userData)){
+                if(Channel.everyChannels.get(nomChannel).isAllowed(userData)){
                     Channel.everyChannels.get(nomChannel).getUserList().add(userData);
                     userData.getChannels().add(Channel.everyChannels.get(nomChannel));
                     sendHistory(userData,nomChannel);
@@ -154,6 +160,9 @@ class SSocket implements Runnable {
                 Channel mainChannel = new Channel();
                 mainChannel.name = nomChannel;
                 mainChannel.type = TypesChannel.valueOf(messageRecu.get("TypeChannel", String.class));
+                if(mainChannel.type == TypesChannel.PRIVATE){
+                    mainChannel.addUserToWhiteList(userData);
+                }
                 Channel.everyChannels.put(nomChannel, mainChannel);
                 Channel.everyChannels.get(nomChannel).getUserList().add(userData);
                 userData.getChannels().add(Channel.everyChannels.get(nomChannel));
@@ -168,7 +177,9 @@ class SSocket implements Runnable {
     private void handleNormalMessage(Document messageRecu){
         Channel channel = Channel.everyChannels.get(messageRecu.get("Channel",String.class));
         Document messageAPartager = MessagesProtocol.normalMessage(messageRecu,userData.getSocketAddress().toString(),userData.getName());
-        channel.sendToChannel(messageAPartager.toJson());
+        if(channel.isAllowed(userData)){
+            channel.sendToChannel(messageAPartager.toJson());
+        }
         database.getCollection("messages").insertOne(messageAPartager);
     }
 

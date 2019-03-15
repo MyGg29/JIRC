@@ -3,6 +3,7 @@ package client.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import models.Client;
 import javafx.application.Platform;
@@ -30,13 +31,13 @@ public class MainController {
     @FXML
     private TextField textInput;
     @FXML
-    private Button send;
-    @FXML
     private TabPane tabs;
+    @FXML
+    private Text userNameLabel;
+
     private Client client;
 
     private Stage statsStage;
-
     StatsController statsController;
 
 
@@ -59,7 +60,6 @@ public class MainController {
             client.setShowMessage(this::showText);
             client.joinChannel(tabs.getSelectionModel().getSelectedItem().getText(), TypesChannel.PUBLIC);
         });
-
     }
 
     /* ---------- Méthode d'écriture du texte du message envoyé dans le channel ---------- */
@@ -160,8 +160,7 @@ public class MainController {
             stage.setTitle("Channel Parameters");
             stage.setScene(new Scene(rootParameters));
             stage.show();
-            client.updateUserList("Général");
-
+            client.updateUserList(tabs.getSelectionModel().getSelectedItem().getText());//Shows the users logged in of the active tab
         }
         catch(Exception e){
             e.printStackTrace();
@@ -186,5 +185,9 @@ public class MainController {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public void setUserNameLabel(String username){
+        this.userNameLabel.setText("Enregistré en tant que " + username);
     }
 }

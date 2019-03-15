@@ -65,6 +65,7 @@ public class ConnexionController {
         if(connected){
             Stage connexionStage = (Stage)identifiant.getScene().getWindow();
             Platform.runLater(connexionStage::close);
+            client.setName(identifiant.getText());
         }
         else{
             Platform.runLater(() ->{

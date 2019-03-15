@@ -19,6 +19,7 @@ public class Client{
     private ClientListener clientListener;
     private int serverPort = 666;
     private int clientPort = 0;
+    private String name = "Anonyme";
 
     public Client(){
         try {
@@ -154,5 +155,12 @@ public class Client{
         this.clientPort = clientPort;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
 

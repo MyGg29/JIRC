@@ -46,6 +46,7 @@ public class Main extends Application {
         connexionStage.setScene(sceneConnexion);
         sceneConnexion.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
         connexionStage.showAndWait();
+        mainController.setUserNameLabel(client.getName());
     }
 
     @Override

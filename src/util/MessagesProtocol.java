@@ -74,4 +74,17 @@ public class MessagesProtocol {
         return d;
     }
 
+    public static Document errorMessage() {
+        Document d = new Document();
+        d.put("Type", "ERROR");
+        d.put("ErrorType","NotAllowed");
+        return d;
+    }
+
+    public static Document confirmAddUser() {
+        Document d = new Document();
+        d.put("Type", "INFO");
+        d.put("TypeInfo", "confirmAddUser");
+        return d;
+    }
 }
