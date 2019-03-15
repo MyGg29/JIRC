@@ -2,9 +2,13 @@ package client.controllers;
 
 import com.sun.deploy.util.FXLoader;
 import com.sun.org.glassfish.external.statistics.Stats;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.input.ScrollEvent;
 import javafx.stage.Modality;
+import javafx.util.Duration;
 import models.Client;
 import javafx.application.Platform;
 import javafx.collections.transformation.FilteredList;
@@ -18,13 +22,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import models.TypesChannel;
+import server.User;
 import util.ISODate;
-
-import javax.swing.JTextField;
-
 import java.io.IOException;
-
-import static javafx.geometry.Pos.CENTER;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 public class MainController {
@@ -34,12 +36,22 @@ public class MainController {
     private Button envoyerBtn;
     @FXML
     private TabPane tabs;
+    @FXML
+    private Label time;
+    @FXML
+    private Label date;
+
+    private int hour;
+    private int minute;
+    private int second;
+    private int year;
+    private int month;
+    private int day;
+
+
     private Client client;
-
     private Stage statsStage;
-
     StatsController statsController;
-
 
 
     public MainController(){
@@ -55,15 +67,37 @@ public class MainController {
         }
 
     }
+
+    @FXML
     public void initialize(){
         Platform.runLater(() -> {
             client.setShowMessage(this::showText);
             client.joinChannel(tabs.getSelectionModel().getSelectedItem().getText(), TypesChannel.PUBLIC);
         });
 
+        //Horloge
+        Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
+            second = LocalDateTime.now().getSecond();
+            minute = LocalDateTime.now().getMinute();
+            hour = LocalDateTime.now().getHour();
+            time.setText(hour + ":" + (minute) + ":" + second);
+            year = LocalDateTime.now().getYear();
+            month = LocalDateTime.now().getMonthValue();
+            day = LocalDateTime.now().getDayOfMonth();
+            date.setText(year + "-" + (month) + "-" + day);
+
+        }),
+                new KeyFrame(Duration.seconds(1))
+        );
+        clock.setCycleCount(Animation.INDEFINITE);
+        clock.play();
+
+
+
+
     }
 
-    /* ---------- Méthode d'écriture du texte du message envoyé dans le channel ---------- */
+    /** Méthode d'écriture du texte du message envoyé dans le channel **/
     //Utilisé par le client qui écoute
 
     public Void showText(String channel, String sender, String content){
@@ -82,24 +116,25 @@ public class MainController {
 
     @FXML
     private void sendMessage(){
-        client.sendMessage(textInput.getText(), tabs.getSelectionModel().getSelectedItem().getText());
-        textInput.clear();
-        if(statsController!=null){
-            statsController.incrementNbMessagesEnvoyes();
+        if(!textInput.getText().isEmpty()){
+            client.sendMessage(textInput.getText(), tabs.getSelectionModel().getSelectedItem().getText());
+            textInput.clear();
+            if(statsController!=null){
+                statsController.incrementNbMessagesEnvoyes();
+            }
         }
+
 
     }
 
     @FXML
     private void clickEnvoyerBtn(){
-        if(!textInput.getText().isEmpty()){
-            sendMessage();
-        }
+        sendMessage();
     }
 
 
 
-    /* ---------- Création d'un nouvel onglet ---------- */
+    /** Création d'un nouvel onglet **/
     @FXML
     private void addTab(){
         try{
@@ -121,7 +156,7 @@ public class MainController {
 
 
 
-    /* ---------- Ouverture de la fenêtre d'accès à un channel ---------- */
+    /** Ouverture de la fenêtre d'accès à un channel **/
     @FXML
     private void showJoinChannel (MouseEvent event) {
         try{
@@ -151,7 +186,7 @@ public class MainController {
     }
 
 
-    /* ---------- Ouverture de la fenêtre de paramètres ---------- */
+    /** Ouverture de la fenêtre de paramètres **/
     @FXML
     private void showChannelParameters(ActionEvent event){
         try{
@@ -169,17 +204,16 @@ public class MainController {
         }
     }
 
-    /* ---------- Ouverture de la fenêtre de stats ---------- */
+    /** Ouverture de la fenêtre de stats **/
     @FXML
     private void showStats(ActionEvent event){
         statsStage.show();
     }
 
 
-    /* ---------- Fermeture de la fenêtre ---------- */
+    /** Fermeture de la fenêtre **/
     @FXML
     public void shutdown(WindowEvent e){
-        //cleanup what's needed
         client.shutdown();
         Platform.exit();
         System.out.println("exiting...");

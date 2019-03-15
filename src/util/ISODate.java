@@ -17,7 +17,7 @@ public class ISODate {
 
         // Conversion
         SimpleDateFormat sdf;
-        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         sdf.setTimeZone(tz);
         this.dateIso = sdf.format(date);
     }

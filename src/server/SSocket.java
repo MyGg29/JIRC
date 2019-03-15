@@ -26,7 +26,7 @@ class SSocket implements Runnable {
         userData.setOutputStream(new DataOutputStream(this.socket.getOutputStream()));
         userData.setInputStream(new DataInputStream(this.socket.getInputStream()));
         userData.setSocketAddress(this.socket.getRemoteSocketAddress());
-        userData.setName("DefaultName (temporary)");
+        userData.setName("Anonyme");
         this.database = jIrcDatabase;
     }
 

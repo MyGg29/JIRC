@@ -16,9 +16,9 @@
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="402.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controllers.MainController">
          <children>
-      <Label alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="214.0" layoutY="6.0" text="JMessenger" textAlignment="CENTER" textFill="#4c7ee0" textOverrun="CENTER_ELLIPSIS" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="23.0" layoutY="4.0" prefHeight="41.0" prefWidth="190.0" text="JMessenger" textAlignment="CENTER" textFill="#2970eb" textOverrun="CENTER_ELLIPSIS" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <font>
-            <Font name="Arial" size="32.0" />
+            <Font name="Century Gothic Bold" size="26.0" />
          </font>
       </Label>
              <TabPane fx:id="tabs" layoutX="7.0" layoutY="49.0" minWidth="-Infinity" prefHeight="303.0" prefWidth="592.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="49.0" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
@@ -34,7 +34,11 @@
                      </Tab>
                  </tabs>
              </TabPane>
-             <TextField fx:id="textInput" layoutX="5.0" layoutY="356.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#sendMessage" prefHeight="40.0" prefWidth="402.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="195.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+      <Label fx:id="time" layoutX="528.0" layoutY="59.0" text="Heure" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="59.0">
+         <font>
+            <Font name="Century Gothic Bold" size="15.0" />
+         </font></Label>
+             <TextField fx:id="textInput" layoutX="5.0" layoutY="356.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#sendMessage" prefHeight="40.0" prefWidth="402.0" promptText="Ecrire un message..." AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="195.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
              <GridPane.margin>
                  <Insets bottom="5.0" right="2.5" top="5.0" />
              </GridPane.margin>
@@ -53,6 +57,15 @@
                   </Button>
       <Button fx:id="stats" layoutX="522.0" layoutY="9.0" mnemonicParsing="false" onAction="#showStats" prefHeight="29.0" prefWidth="69.0" text="Stats" AnchorPane.rightAnchor="11.0" />
       <Button fx:id="envoyerBtn" layoutX="416.0" layoutY="356.0" mnemonicParsing="false" onAction="#clickEnvoyerBtn" prefHeight="40.0" prefWidth="95.0" text="Envoyer" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="91.0" />
+      <ImageView fitHeight="49.0" fitWidth="45.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../ressources/logoalternativedetoured.PNG" />
+         </image>
+      </ImageView>
+      <Label fx:id="date" layoutX="446.0" layoutY="59.0" text="Date" AnchorPane.rightAnchor="121.0" AnchorPane.topAnchor="59.0">
+         <font>
+            <Font name="Century Gothic Bold" size="15.0" />
+         </font></Label>
 
 
          </children>

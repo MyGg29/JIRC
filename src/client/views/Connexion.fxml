@@ -14,15 +14,15 @@
       <Insets />
    </opaqueInsets>
    <children>
-      <Button fx:id="connexionBtn" layoutX="177.0" layoutY="303.0" mnemonicParsing="false" onAction="#clickConnexion" text="Connexion" AnchorPane.bottomAnchor="66.0" AnchorPane.leftAnchor="177.0" AnchorPane.rightAnchor="177.0" />
-      <TextField fx:id="identifiant" layoutX="177.0" layoutY="199.0" prefHeight="31.0" prefWidth="246.0" promptText="Identifiant" AnchorPane.leftAnchor="177.0" AnchorPane.rightAnchor="177.0" />
-      <Label layoutX="128.0" layoutY="148.0" text="Veuillez vous identifier pour accéder à la messagerie" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="126.0" />
-      <PasswordField fx:id="password" layoutX="178.0" layoutY="242.0" onAction="#clickConnexion" prefHeight="31.0" prefWidth="246.0" promptText="Mot de passe" AnchorPane.leftAnchor="178.0" AnchorPane.rightAnchor="176.0" />
-      <ImageView fitHeight="118.0" fitWidth="158.0" layoutX="245.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+      <Button fx:id="connexionBtn" layoutX="203.0" layoutY="307.0" mnemonicParsing="false" onAction="#clickConnexion" prefHeight="31.0" prefWidth="197.0" text="Connexion" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="203.0" AnchorPane.rightAnchor="200.0" />
+      <TextField fx:id="identifiant" layoutX="177.0" layoutY="209.0" prefHeight="31.0" prefWidth="246.0" promptText="Identifiant" AnchorPane.leftAnchor="177.0" AnchorPane.rightAnchor="177.0" />
+      <Label layoutX="128.0" layoutY="165.0" text="Veuillez vous identifier pour accéder à la messagerie" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="126.0" />
+      <PasswordField fx:id="password" layoutX="177.0" layoutY="253.0" onAction="#clickConnexion" prefHeight="31.0" prefWidth="246.0" promptText="Mot de passe" AnchorPane.leftAnchor="177.0" AnchorPane.rightAnchor="177.0" />
+      <ImageView fitHeight="151.0" fitWidth="129.0" layoutX="239.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../ressources/logodetoured.png" />
+            <Image url="@../ressources/logoalternativetextdetoured.png" />
          </image>
       </ImageView>
-      <Button fx:id="inscriptionBtn" layoutX="177.0" layoutY="343.0" mnemonicParsing="false" onAction="#showRegister" text="S'inscrire" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="177.0" AnchorPane.rightAnchor="177.0" />
+      <Button fx:id="inscriptionBtn" layoutX="203.0" layoutY="350.0" mnemonicParsing="false" onAction="#showRegister" prefHeight="31.0" prefWidth="197.0" text="S'inscrire" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="203.0" AnchorPane.rightAnchor="200.0" />
    </children>
 </AnchorPane>

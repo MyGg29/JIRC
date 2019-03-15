@@ -41,7 +41,7 @@ public class Main extends Application {
         connexionController.setClient(client); //important
         connexionStage.setTitle("Connexion");
         connexionStage.initModality(Modality.APPLICATION_MODAL);
-        connexionStage.initOwner(scene.getWindow());//Le model de connexion est celui de la scene principale
+        connexionStage.initOwner(scene.getWindow());//Le modèle de connexion est celui de la scene principale
         connexionStage.setScene(sceneConnexion);
         sceneConnexion.getStylesheets().add(getClass().getResource("css/common.css").toExternalForm());
         connexionStage.setResizable(false);//empêche le resize de la fenêtre et donc fixe la taille simplement
