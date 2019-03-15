@@ -2,6 +2,7 @@ package client;
 
 import client.controllers.ConnexionController;
 import client.controllers.MainController;
+import com.mongodb.MongoClient;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClients;
 import javafx.application.Application;
@@ -11,6 +12,11 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Client;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
+
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 
 public class Main extends Application {
@@ -18,7 +24,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Client client = new Client();
-
 
         //On commence en ouvrant 2 fenêtres, la fenetre de connexion et la fenêtre de chat
         /* ---------- Initialisation de la fenêtre principale ---------- */

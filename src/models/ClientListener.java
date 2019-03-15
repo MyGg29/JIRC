@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import javafx.util.Pair;
 import org.bson.Document;
 import util.Function4Args;
 
@@ -11,16 +12,20 @@ import javax.xml.crypto.Data;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.SocketException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class ClientListener implements Runnable{
     public boolean exitListenThread = false;
     public DataInputStream dIn;
+
+    //set behaviors of the client when the server is sending some message to the client
     public Function4Args<String,String,String, Void> showMessage;
     public Function<String,Void> showError;
     public Function<Boolean,Void> connexionCallback;
-    public Function<ObservableList<String>,Void> userlistCallback;
+    public Function<Pair<String,ObservableList<String>>,Void> userlistCallback;
 
     public ClientListener(DataInputStream dIn){
         this.dIn = dIn;
@@ -42,8 +47,10 @@ public class ClientListener implements Runnable{
                 if(messageRecu.get("Type").equals("INFO")){
                     if(messageRecu.get("TypeInfo").equals("userList")){
                         List<String> userList = messageRecu.get("userNameList", List.class);
-                        ObservableList<String> observableUsername = FXCollections.observableArrayList(userList);
-                        userlistCallback.apply(observableUsername);
+                        ObservableList<String> userListObservable = FXCollections.observableArrayList(userList);
+                        String userListChannel = messageRecu.get("userNameListChannel",String.class);
+                        Pair<String,ObservableList<String>> userListPair = new Pair<>(userListChannel,userListObservable);
+                        userlistCallback.apply(userListPair);
                     }
                     if(messageRecu.get("TypeInfo").equals("confirmAddUser")){
                         Platform.runLater(() ->{

@@ -2,16 +2,14 @@ package util;
 
 import models.TypesChannel;
 import org.bson.Document;
-import server.User;
 
-import javax.print.Doc;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Acts like a DocumentFactory
  */
-public class MessagesProtocol {
+public class MessagesFactory {
     public static Document loginMessage(String name, String password){
         Document d = new Document();
         d.put("Type", "LOGIN");

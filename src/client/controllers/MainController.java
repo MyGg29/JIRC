@@ -62,9 +62,14 @@ public class MainController {
         });
     }
 
-    /* ---------- Méthode d'écriture du texte du message envoyé dans le channel ---------- */
-    //Utilisé par le client qui écoute
 
+    /**
+     * shows some text on the textarea a tab
+     * @param channel the channel where the text should be added
+     * @param sender sender of the message
+     * @param content the message
+     * @return
+     */
     public Void showText(String channel, String sender, String content){
         //On append pour le tab ouvert mais aussi toutes les tabs ouverts
         //On peut avoir plusieurs tabs liés au même channel ouverts en même temps
@@ -79,6 +84,10 @@ public class MainController {
         return null;
     }
 
+    /**
+     * sends a message to the server
+     * @param e
+     */
     @FXML
     private void sendMessage(ActionEvent e){
         client.sendNormalMessage(textInput.getText(), tabs.getSelectionModel().getSelectedItem().getText());
@@ -90,8 +99,9 @@ public class MainController {
     }
 
 
-
-    /* ---------- Création d'un nouvel onglet ---------- */
+    /**
+     * adds a tab to the window. Fired when clicking the + tab
+     */
     @FXML
     private void addTab(){
         try{
@@ -112,8 +122,10 @@ public class MainController {
     }
 
 
-
-    /* ---------- Ouverture de la fenêtre d'accès à un channel ---------- */
+    /**
+     * Opens the popup used for the user to add a channel. Fired when clicking the text area for the first time
+     * @param event
+     */
     @FXML
     private void showJoinChannel (MouseEvent event) {
         try{
@@ -143,7 +155,10 @@ public class MainController {
     }
 
 
-    /* ---------- Ouverture de la fenêtre de paramètres ---------- */
+    /**
+     * shows the channel parameters upon clicking the params button
+     * @param event
+     */
     @FXML
     private void showChannelParameters(ActionEvent event){
         try{
@@ -167,14 +182,20 @@ public class MainController {
         }
     }
 
-    /* ---------- Ouverture de la fenêtre de stats ---------- */
+    /**
+     * Opens the stats window.Fired upon clicking the stats button
+     * @param event
+     */
     @FXML
     private void showStats(ActionEvent event){
         statsStage.show();
     }
 
 
-    /* ---------- Fermeture de la fenêtre ---------- */
+    /**
+     * When the user closes the main window
+     * @param e
+     */
     @FXML
     public void shutdown(WindowEvent e){
         //cleanup what's needed
@@ -183,10 +204,18 @@ public class MainController {
         System.out.println("exiting...");
     }
 
+    /**
+     * sets the client context
+     * @param client
+     */
     public void setClient(Client client) {
         this.client = client;
     }
 
+    /**
+     * set the user label (top left)
+     * @param username
+     */
     public void setUserNameLabel(String username){
         this.userNameLabel.setText("Enregistré en tant que " + username);
     }

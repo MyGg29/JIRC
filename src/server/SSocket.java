@@ -4,8 +4,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import models.TypesChannel;
 import org.bson.Document;
-import sun.plugin2.main.client.MessagePassingExecutionContext;
-import util.MessagesProtocol;
+import util.MessagesFactory;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -120,10 +119,10 @@ class SSocket implements Runnable {
             userToAdd.setName(userName);
             if(Channel.everyChannels.get(channel).isAllowed(userData)){
                 Channel.everyChannels.get(channel).addUserToWhiteList(userToAdd);
-                userData.send(MessagesProtocol.confirmAddUser().toJson());
+                userData.send(MessagesFactory.confirmAddUser().toJson());
             }
             else{
-                userData.send(MessagesProtocol.errorMessage().toJson());
+                userData.send(MessagesFactory.errorMessage().toJson());
             }
             database.getCollection("params").insertOne(messageRecu);
         }
@@ -134,7 +133,7 @@ class SSocket implements Runnable {
             if(messageRecu.get("TypeInfo").equals("getUserList")){
                 String channel = messageRecu.get("Channel",String.class);
                 List<String> userNameList = Channel.everyChannels.get(channel).getUserList().stream().map(User::getName).collect(Collectors.toList());
-                Document d = MessagesProtocol.userList(userNameList);
+                Document d = MessagesFactory.userList(userNameList);
                 userData.send(d.toJson());
             }
         }catch (IOException e){
@@ -152,7 +151,7 @@ class SSocket implements Runnable {
                     sendHistory(userData,nomChannel);
                 }
                 else{
-                    Document d = MessagesProtocol.normalMessage(nomChannel,"Tu n'as pas le droit d'entrer dans ce channel","", "System");
+                    Document d = MessagesFactory.normalMessage(nomChannel,"Tu n'as pas le droit d'entrer dans ce channel","", "System");
                     userData.send(d.toJson());//Not allowed to join
                 }
             }
@@ -176,7 +175,7 @@ class SSocket implements Runnable {
 
     private void handleNormalMessage(Document messageRecu){
         Channel channel = Channel.everyChannels.get(messageRecu.get("Channel",String.class));
-        Document messageAPartager = MessagesProtocol.normalMessage(messageRecu,userData.getSocketAddress().toString(),userData.getName());
+        Document messageAPartager = MessagesFactory.normalMessage(messageRecu,userData.getSocketAddress().toString(),userData.getName());
         if(channel.isAllowed(userData)){
             channel.sendToChannel(messageAPartager.toJson());
         }

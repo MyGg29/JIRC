@@ -8,6 +8,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controllers.ParametersController">
    <children>
@@ -19,6 +20,7 @@
                      <children>
                         <ListView fx:id="userList" layoutX="25.0" layoutY="53.0" prefHeight="304.0" prefWidth="551.0" />
                         <Label layoutX="25.0" layoutY="27.0" prefHeight="17.0" prefWidth="165.0" text="Liste des utilisateurs connectés" />
+                        <Text fx:id="labelUserList" layoutX="190.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" />
                      </children></AnchorPane>
             </content>
           </Tab>

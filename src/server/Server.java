@@ -1,21 +1,10 @@
 package server;
 
-import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoCommandException;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import models.Message;
-import models.TypesChannel;
-import models.TypesMessage;
-import org.bson.Document;
-import util.MessagesProtocol;
 
-import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;

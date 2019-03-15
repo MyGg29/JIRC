@@ -1,16 +1,14 @@
 package models;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Pair;
 import org.bson.Document;
 import util.Function4Args;
-import util.MessagesProtocol;
+import util.MessagesFactory;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.List;
 import java.util.function.Function;
 
 public class Client{
@@ -42,7 +40,7 @@ public class Client{
     }
 
     public void connect(String userName,String password){
-        Document d = MessagesProtocol.loginMessage(userName,password);
+        Document d = MessagesFactory.loginMessage(userName,password);
         send(d);
     }
 
@@ -52,7 +50,7 @@ public class Client{
      * @param typeChannel le type du channel, faisant partie de l'enum TypeChannel
      */
     public void joinChannel(String channelName, TypesChannel typeChannel){
-        Document d = MessagesProtocol.joinMessage(channelName,typeChannel);
+        Document d = MessagesFactory.joinMessage(channelName,typeChannel);
         send(d);
     }
 
@@ -62,7 +60,7 @@ public class Client{
      * @param channel le channel ou partager le message
      */
     public void sendNormalMessage(String message, String channel) {
-       Document d = MessagesProtocol.normalMessage(channel,message);
+       Document d = MessagesFactory.normalMessage(channel,message);
        send(d);
     }
 
@@ -74,7 +72,7 @@ public class Client{
      * @param channel le channel ou ajouter cet utilisateur
      */
     public void addToWhitelist(String user, String channel){
-        Document d = MessagesProtocol.addToWhitelistMessage(user,channel);
+        Document d = MessagesFactory.addToWhitelistMessage(user,channel);
         send(d);
 
     }
@@ -115,11 +113,19 @@ public class Client{
         this.clientListener.showMessage = showMessageFunction;
     }
 
+    /**
+     * set the behavior of after the client is connected
+     * @param connexionCallback
+     */
     public void setConnexionCallback(Function<Boolean,Void> connexionCallback) {
         this.clientListener.connexionCallback = connexionCallback;
     }
 
-    public void setUserlistCallback(Function<ObservableList<String>, Void> usernameList) {
+    /**
+     * set the behavior when the client is going to ask for the list of users of a channel
+     * @param usernameList
+     */
+    public void setUserlistCallback(Function<Pair<String,ObservableList<String>>, Void> usernameList) {
         this.clientListener.userlistCallback = usernameList;
     }
 
@@ -143,7 +149,7 @@ public class Client{
      * @param channel le channel dont on souhaite l'info
      */
     public void updateUserList(String channel) {
-        Document d = MessagesProtocol.getUserList(channel);
+        Document d = MessagesFactory.getUserList(channel);
         send(d);
     }
 

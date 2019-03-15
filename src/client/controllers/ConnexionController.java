@@ -77,6 +77,10 @@ public class ConnexionController {
         return null;
     }
 
+    /**
+     * Set the client "context" of the window. Which client will use this window basically
+     * @param client
+     */
     public void setClient(Client client) {
         this.client = client;
     }
