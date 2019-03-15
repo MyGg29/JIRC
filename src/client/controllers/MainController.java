@@ -2,9 +2,15 @@ package client.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import com.sun.deploy.util.FXLoader;
+import com.sun.org.glassfish.external.statistics.Stats;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
+import javafx.util.Duration;
 import models.Client;
 import javafx.application.Platform;
 import javafx.collections.transformation.FilteredList;
@@ -18,10 +24,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import models.TypesChannel;
+import server.User;
 import util.ISODate;
 
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -31,15 +40,28 @@ public class MainController {
     @FXML
     private TextField textInput;
     @FXML
+    private Button envoyerBtn;
+    @FXML
     private TabPane tabs;
+    @FXML
+    private Label time;
+    @FXML
+    private Label date;
     @FXML
     private Text userNameLabel;
 
-    private Client client;
+    private int hour;
+    private int minute;
+    private int second;
+    private int year;
+    private int month;
+    private int day;
 
+
+
+    private Client client;
     private Stage statsStage;
     StatsController statsController;
-
 
 
     public MainController(){
@@ -55,11 +77,34 @@ public class MainController {
         }
 
     }
+
+    @FXML
     public void initialize(){
         Platform.runLater(() -> {
             client.setShowMessage(this::showText);
             client.joinChannel(tabs.getSelectionModel().getSelectedItem().getText(), TypesChannel.PUBLIC);
         });
+
+        //Horloge
+        Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
+            second = LocalDateTime.now().getSecond();
+            minute = LocalDateTime.now().getMinute();
+            hour = LocalDateTime.now().getHour();
+            time.setText(hour + ":" + (minute) + ":" + second);
+            year = LocalDateTime.now().getYear();
+            month = LocalDateTime.now().getMonthValue();
+            day = LocalDateTime.now().getDayOfMonth();
+            date.setText(year + "-" + (month) + "-" + day);
+
+        }),
+                new KeyFrame(Duration.seconds(1))
+        );
+        clock.setCycleCount(Animation.INDEFINITE);
+        clock.play();
+
+
+
+
     }
 
 
@@ -90,14 +135,20 @@ public class MainController {
      */
     @FXML
     private void sendMessage(ActionEvent e){
-        client.sendNormalMessage(textInput.getText(), tabs.getSelectionModel().getSelectedItem().getText());
-        textInput.clear();
-        if(statsController!=null){
-            statsController.incrementNbMessagesEnvoyes();
+        if(!textInput.getText().isEmpty()) {
+            client.sendNormalMessage(textInput.getText(), tabs.getSelectionModel().getSelectedItem().getText());
+            textInput.clear();
+            if (statsController != null) {
+                statsController.incrementNbMessagesEnvoyes();
+            }
         }
-
     }
 
+
+    @FXML
+    private void clickEnvoyerBtn(ActionEvent e){
+        sendMessage(e);
+    }
 
     /**
      * adds a tab to the window. Fired when clicking the + tab
@@ -217,6 +268,6 @@ public class MainController {
      * @param username
      */
     public void setUserNameLabel(String username){
-        this.userNameLabel.setText("Enregistré en tant que " + username);
+        this.userNameLabel.setText("Utilisateur : " + username);
     }
 }

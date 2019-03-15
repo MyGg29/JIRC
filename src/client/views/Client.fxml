@@ -11,71 +11,65 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="402.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controllers.MainController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="402.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controllers.MainController">
          <children>
-            <GridPane alignment="CENTER" layoutX="14.0" layoutY="478.0" maxHeight="1080.0" maxWidth="1920.0" minHeight="200.0" minWidth="300.0" prefHeight="1080.0" prefWidth="1920.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="308.0" minWidth="10.0" prefWidth="223.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="380.0" minWidth="10.0" prefWidth="297.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="72.0" />
-            <ColumnConstraints />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints maxHeight="147.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="334.0" minHeight="10.0" prefHeight="300.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="51.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                        <Button fx:id="buttonParams" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="31.0" minWidth="31.0" mnemonicParsing="false" onAction="#showChannelParameters" prefWidth="69.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2">
-                           <graphic>
-                                <ImageView fitHeight="30.0" fitWidth="158.0" preserveRatio="true">
-                                    <image>
-                                        <Image url="@../ressources/settings2.png" />
-                                    </image>
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                                </ImageView>
-                           </graphic>
-                     <GridPane.margin>
-                        <Insets bottom="5.0" left="2.5" top="5.0" />
-                     </GridPane.margin>
-                        </Button>
-                        <TextField fx:id="textInput" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#sendMessage" GridPane.columnSpan="2" GridPane.rowIndex="2">
-                     <GridPane.margin>
-                        <Insets bottom="5.0" right="2.5" top="5.0" />
-                     </GridPane.margin>
-                  </TextField>
-                   <TabPane fx:id="tabs" layoutX="7.0" layoutY="19.0" prefHeight="331.0" prefWidth="594.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" GridPane.columnSpan="3" GridPane.rowIndex="1">
-                       <tabs>
-                           <Tab text="Général">
-                               <content>
-                                   <TextArea fx:id="chatBox1" editable="false" wrapText="true" />
-                               </content>
-                           </Tab>
-                           <Tab onSelectionChanged="#addTab" text="+">
-                               <content>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="23.0" layoutY="4.0" prefHeight="41.0" prefWidth="190.0" text="JMessenger" textAlignment="CENTER" textFill="#2970eb" textOverrun="CENTER_ELLIPSIS" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <font>
+            <Font name="Century Gothic Bold" size="26.0" />
+         </font>
+      </Label>
+             <TabPane fx:id="tabs" layoutX="7.0" layoutY="49.0" minWidth="-Infinity" prefHeight="303.0" prefWidth="592.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="49.0" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                 <tabs>
+                     <Tab text="Général">
+                         <content>
+                             <TextArea fx:id="chatBox1" editable="false" wrapText="true" />
                          </content>
-                           </Tab>
-                       </tabs>
-                   </TabPane>
-            <Label text="JMessenger" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" GridPane.columnIndex="1" GridPane.columnSpan="2">
-               <font>
-                  <Font size="32.0" />
-               </font>
-            </Label>
-            <Button fx:id="stats" mnemonicParsing="false" onAction="#showStats" prefHeight="26.0" prefWidth="72.0" text="Stats" GridPane.columnIndex="2" GridPane.columnSpan="2" />
-            <Text fx:id="userNameLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Enregistré en tant que Anonyme" />
-               </children>
-            </GridPane>
-      
-      
+                     </Tab>
+                     <Tab onSelectionChanged="#addTab" text="+">
+                         <content>
+                         </content>
+                     </Tab>
+                 </tabs>
+             </TabPane>
+      <Label fx:id="time" layoutX="528.0" layoutY="59.0" text="Heure" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="59.0">
+         <font>
+            <Font name="Century Gothic Bold" size="15.0" />
+         </font></Label>
+      <Text fx:id="userNameLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="35.0" />
+             <TextField fx:id="textInput" layoutX="5.0" layoutY="356.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#sendMessage" prefHeight="40.0" prefWidth="402.0" promptText="Ecrire un message..." AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="195.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+             <GridPane.margin>
+                 <Insets bottom="5.0" right="2.5" top="5.0" />
+             </GridPane.margin>
+         </TextField>
+                  <Button fx:id="buttonParams" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="519.0" layoutY="356.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="31.0" minWidth="31.0" mnemonicParsing="false" onAction="#showChannelParameters" prefWidth="69.0" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="14.0">
+                     <graphic>
+                          <ImageView fitHeight="30.0" fitWidth="158.0" preserveRatio="true">
+                              <image>
+                                  <Image url="@../ressources/settings2.png" />
+                              </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                          </ImageView>
+                     </graphic>
+                  </Button>
+      <Button fx:id="stats" layoutX="522.0" layoutY="9.0" mnemonicParsing="false" onAction="#showStats" prefHeight="29.0" prefWidth="69.0" text="Stats" AnchorPane.rightAnchor="11.0" />
+      <Button fx:id="envoyerBtn" layoutX="416.0" layoutY="356.0" mnemonicParsing="false" onAction="#clickEnvoyerBtn" prefHeight="40.0" prefWidth="95.0" text="Envoyer" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="91.0" />
+      <ImageView fitHeight="49.0" fitWidth="45.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../ressources/logoalternativedetoured.PNG" />
+         </image>
+      </ImageView>
+      <Label fx:id="date" layoutX="446.0" layoutY="59.0" text="Date" AnchorPane.rightAnchor="121.0" AnchorPane.topAnchor="59.0">
+         <font>
+            <Font name="Century Gothic Bold" size="15.0" />
+         </font></Label>
+
+
          </children>
          <opaqueInsets>
             <Insets />
