@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import org.bson.Document;
 import util.Function4Args;
+import util.ISODate;
 import util.MessagesFactory;
 
 import java.io.*;
@@ -17,6 +18,7 @@ public class Client{
     private ClientListener clientListener;
     private int serverPort = 666;
     private int clientPort = 0;
+    private InetAddress clientIp;
     private String name = "Anonyme";
 
     public Client(){
@@ -24,6 +26,7 @@ public class Client{
             InetAddress inetAdd = InetAddress.getByName("127.0.0.1");
             Socket socket = new Socket(inetAdd, serverPort);//Ouvre un socket sur localhost
             this.clientPort = socket.getLocalPort();
+            this.clientIp = socket.getLocalAddress();
 
             InputStream in = socket.getInputStream();
             OutputStream out = socket.getOutputStream();
@@ -168,5 +171,14 @@ public class Client{
     public String getName() {
         return name;
     }
+
+    public InetAddress getClientIp() {
+        return clientIp;
+    }
+
+    public int getServerPort() {
+        return serverPort;
+    }
+
 }
 

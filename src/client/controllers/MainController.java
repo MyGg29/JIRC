@@ -57,12 +57,9 @@ public class MainController {
     private int month;
     private int day;
 
-
-
     private Client client;
-    private Stage statsStage;
+    private Stage statsStage;//Used to keep track of the user data live
     StatsController statsController;
-
 
     public MainController(){
         try{
@@ -72,6 +69,7 @@ public class MainController {
             statsStage = new Stage();
             statsStage.setTitle("Statistiques");
             statsStage.setScene(new Scene(rootStats));
+            statsController.setClient(client);
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -101,10 +99,6 @@ public class MainController {
         );
         clock.setCycleCount(Animation.INDEFINITE);
         clock.play();
-
-
-
-
     }
 
 
@@ -142,12 +136,6 @@ public class MainController {
                 statsController.incrementNbMessagesEnvoyes();
             }
         }
-    }
-
-
-    @FXML
-    private void clickEnvoyerBtn(ActionEvent e){
-        sendMessage(e);
     }
 
     /**

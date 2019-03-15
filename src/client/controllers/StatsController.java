@@ -1,73 +1,80 @@
 package client.controllers;
 
-import database.Database;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.TextField;
 import models.Client;
-import models.TypesChannel;
+import util.ISODate;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class StatsController {
 
     @FXML
     private TextField nom;
     @FXML
-    private TextField prenom;
+    private TextField adresseIP;
     @FXML
-    private TextField age;
+    private TextField portClient;
     @FXML
-    private TextField pseudo;
-    @FXML
-    private TextField password;
-    @FXML
-    private TextField dateInscription;
+    private TextField portServeur;
     @FXML
     private TextField nbMessagesEnvoyes;
     @FXML
-    private Button desinscriptionBtn;
+    private TextField derniereConnexion;
+    @FXML
+    private LineChart historiqueMessageLineChart;
+    @FXML
+    private LineChart historiqueNbUtilisateurConnecte;
 
-    int nbMessageSend = 0;
-
-    Database db;
+    private XYChart.Series<String,Number> serieMessageEnvoye;
+    private XYChart.Series<String,Number> serieUtilisateurConnecte;
+    private int nbMessageSend = 0;
+    private int nbUtilisateurConnecte = 0;
+    private Client client;
 
     public StatsController(){
 
     }
+
     public void initialize(){
+        derniereConnexion.setText(new ISODate().toString());
+        serieMessageEnvoye = new XYChart.Series<>();
+        serieMessageEnvoye.setName("Nombre total de message envoyé");
+        historiqueMessageLineChart.getData().addAll(serieMessageEnvoye);
+        serieUtilisateurConnecte = new XYChart.Series<>();
+        serieUtilisateurConnecte.setName("Nombre d'utilisateur connecté en même temps");
+        historiqueMessageLineChart.getData().addAll(serieUtilisateurConnecte);
     }
 
     public void incrementNbMessagesEnvoyes(){
         nbMessageSend++;
         nbMessagesEnvoyes.setText(Integer.toString(nbMessageSend));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date();
+        serieMessageEnvoye.getData().add(new XYChart.Data(dateFormat.format(date),nbMessageSend));
     }
 
     public void refreshInformations(){
-        //TODO : récup dans la base
-        nom.setText("nom");
-        prenom.setText("prenom");
-        age.setText("age");
-        pseudo.setText("pseudo");
-        password.setText("password");
-
+        nom.setText(client.getName());
+        adresseIP.setText(client.getClientIp().toString());
+        portClient.setText(Integer.toString(client.getClientPort()));
+        portServeur.setText(Integer.toString(client.getServerPort()));
     }
 
-    @FXML
-    public void clickDesinscription(ActionEvent e)
-    {
-        if(!nom.getText().isEmpty() && !prenom.getText().isEmpty() && !pseudo.getText().isEmpty()
-                && !password.getText().isEmpty() && !age.getText().isEmpty()){
+    public void setNbUtilisateurConnecte(int nbUtilisateurConnecte){
+        this.nbUtilisateurConnecte = nbUtilisateurConnecte;
 
-            //suppression de l'utilisateur de la base de données
-            db.supprimerUtilisateurBDD(nom.getText(), prenom.getText(), pseudo.getText(),
-                    password.getText(), age.getText());
-        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date();
+        serieMessageEnvoye.getData().add(new XYChart.Data(dateFormat.format(date),this.nbUtilisateurConnecte));
     }
 
-
-
+    public void setClient(Client client) {
+        this.client = client;
+    }
 }
 
