@@ -4,6 +4,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import models.TypesChannel;
 import org.bson.Document;
+import org.json.XML;
 import util.MessagesFactory;
 
 import java.io.DataInputStream;
@@ -11,14 +12,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.eq;
 
 
-
 //This is the main socket of the server, each user has one instance of this class running on the server
-class SSocket implements Runnable {
+public class SSocket implements Runnable {
     private Socket socket;
     private User userData;
     MongoDatabase database;
@@ -127,6 +128,15 @@ class SSocket implements Runnable {
             }
             database.getCollection("params").insertOne(messageRecu);
         }
+        if(messageRecu.get("TypeParams").equals("ExtractJson")){
+            String channel = messageRecu.get("Channel",String.class);
+            FindIterable<Document> e = database.getCollection("messages").find(eq("Channel",channel));
+            final StringBuilder json = new StringBuilder();
+            e.forEach((Consumer<? super Document>) x-> json.append(x.toJson()));
+            Document d = MessagesFactory.extractJsonReponse(json.toString());
+            userData.send(d.toJson());
+        }
+
     }
 
     private void handleInfo(Document messageRecu) {
