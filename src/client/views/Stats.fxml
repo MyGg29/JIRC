@@ -16,7 +16,7 @@
             <Insets />
          </opaqueInsets>
    <children>
-      <TabPane layoutY="50.0" prefHeight="359.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane layoutY="50.0" prefHeight="359.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="-9.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
         <tabs>
           <Tab text="Informations générales">
             <content>
@@ -38,7 +38,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <LineChart fx:id="historiqueNbUtilisateurConnecte" alternativeColumnFillVisible="true" prefHeight="261.0" prefWidth="600.0" title="Historique des connexions">
+                        <LineChart fx:id="historiqueNbUtilisateurConnecte" alternativeColumnFillVisible="true" prefHeight="261.0" prefWidth="600.0" title="Historique des connexions" AnchorPane.bottomAnchor="59.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <xAxis>
                               <CategoryAxis side="BOTTOM" />
                            </xAxis>
@@ -46,8 +46,8 @@
                               <NumberAxis side="LEFT" />
                            </yAxis>
                         </LineChart>
-                        <Label layoutX="41.0" layoutY="266.0" text="Dernière connexion :" />
-                        <TextField fx:id="derniereConnexion" layoutX="198.0" layoutY="261.0" />
+                        <Label layoutX="41.0" layoutY="266.0" text="Dernière connexion :" AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="41.0" />
+                        <TextField fx:id="derniereConnexion" layoutX="198.0" layoutY="261.0" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="198.0" />
                      </children>
                   </AnchorPane>
             </content>
@@ -56,9 +56,9 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="371.0" prefWidth="591.0">
                      <children>
-                        <TextField fx:id="nbMessagesEnvoyes" alignment="CENTER" editable="false" layoutX="317.0" layoutY="256.0" prefHeight="31.0" prefWidth="46.0" />
-                        <Label layoutX="34.0" layoutY="263.0" text="Nombre total de messages envoyés cette session :" />
-                        <LineChart fx:id="historiqueMessageLineChart" alternativeColumnFillVisible="true" prefHeight="261.0" prefWidth="600.0" title="Historique du nombre de messages">
+                        <TextField fx:id="nbMessagesEnvoyes" alignment="CENTER" editable="false" layoutX="377.0" layoutY="259.0" prefHeight="31.0" prefWidth="46.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="377.0" />
+                        <Label layoutX="34.0" layoutY="263.0" text="Nombre total de messages envoyés cette session :" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="34.0" />
+                        <LineChart fx:id="historiqueMessageLineChart" alternativeColumnFillVisible="true" prefHeight="261.0" prefWidth="600.0" title="Historique du nombre de messages" AnchorPane.bottomAnchor="59.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <xAxis>
                               <CategoryAxis side="BOTTOM" />
                            </xAxis>
@@ -71,7 +71,7 @@
             </Tab>
         </tabs>
       </TabPane>
-      <Label layoutX="221.0" layoutY="4.0" text="Statistiques">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="221.0" layoutY="4.0" text="Statistiques" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <font>
             <Font size="31.0" />
          </font>
