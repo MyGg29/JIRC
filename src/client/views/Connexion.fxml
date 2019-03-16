@@ -23,6 +23,5 @@
             <Image url="@../ressources/logoalternativetextdetoured.png" />
          </image>
       </ImageView>
-      <Button fx:id="inscriptionBtn" layoutX="203.0" layoutY="350.0" mnemonicParsing="false" onAction="#showRegister" prefHeight="31.0" prefWidth="197.0" text="S'inscrire" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="203.0" AnchorPane.rightAnchor="200.0" />
    </children>
 </AnchorPane>
