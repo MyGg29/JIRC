@@ -85,4 +85,20 @@ public class MessagesFactory {
         d.put("TypeInfo", "confirmAddUser");
         return d;
     }
+
+    public static Document extractJson(String channel) {
+        Document d = new Document();
+        d.put("Type", "PARAMS");
+        d.put("TypeParams","ExtractJson");
+        d.put("Channel",channel);
+        return d;
+    }
+
+    public static Document extractJsonReponse(String json) {
+        Document d = new Document();
+        d.put("Type", "PARAMS");
+        d.put("TypeParams","ExtractJson");
+        d.put("Json",json);
+        return d;
+    }
 }

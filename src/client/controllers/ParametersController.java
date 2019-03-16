@@ -44,6 +44,10 @@ public class ParametersController {
         client.addToWhitelist(name,channel);
     }
 
+    @FXML
+    public void exportXmlClick(ActionEvent e){
+        client.extractJson("Général");
+    }
     /**
      * sets the client context
      * @param client

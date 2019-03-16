@@ -4,7 +4,6 @@ import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import org.bson.Document;
 import util.Function4Args;
-import util.ISODate;
 import util.MessagesFactory;
 
 import java.io.*;
@@ -12,6 +11,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.function.Function;
 
+/**
+ * "Client" is the class making the connection between the client side and the server side. Every controllers must have access the same instance of this class in order to sync everything.
+ */
 public class Client{
     private DataInputStream dIn;
     private DataOutputStream dOut;
@@ -153,6 +155,11 @@ public class Client{
      */
     public void updateUserList(String channel) {
         Document d = MessagesFactory.getUserList(channel);
+        send(d);
+    }
+
+    public void extractJson(String channel) {
+        Document d = MessagesFactory.extractJson(channel);
         send(d);
     }
 

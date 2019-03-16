@@ -3,7 +3,11 @@ package models;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.bson.Document;
 import util.Function4Args;
@@ -58,6 +62,19 @@ public class ClientListener implements Runnable{
                             alert.setTitle("Utilisateur bien ajouté");
                             alert.setContentText("Utilisateur bien ajouté");
                             alert.showAndWait();
+                        });
+                    }
+                }
+                if(messageRecu.get("Type").equals("PARAMS")){
+                    if(messageRecu.get("TypeParams").equals("ExtractJson")){
+                        Platform.runLater(()->{
+                            TextArea txt = new TextArea();
+                            txt.setText(messageRecu.get("Json",String.class));
+                            StackPane p = new StackPane(txt);
+                            Scene s = new Scene(p);
+                            Stage stage = new Stage();
+                            stage.setScene(s);
+                            stage.show();
                         });
                     }
                 }
