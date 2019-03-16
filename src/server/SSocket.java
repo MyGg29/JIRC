@@ -186,11 +186,13 @@ public class SSocket implements Runnable {
 
     private void handleNormalMessage(Document messageRecu){
         Channel channel = Channel.everyChannels.get(messageRecu.get("Channel",String.class));
-        Document messageAPartager = MessagesFactory.normalMessage(messageRecu,userData.getSocketAddress().toString(),userData.getName());
-        if(channel.isAllowed(userData)){
-            channel.sendToChannel(messageAPartager.toJson());
+        if(channel != null) {//the channel exits
+            Document messageAPartager = MessagesFactory.normalMessage(messageRecu,userData.getSocketAddress().toString(),userData.getName());
+            if(channel.isAllowed(userData)){
+                channel.sendToChannel(messageAPartager.toJson());
+            }
+            database.getCollection("messages").insertOne(messageAPartager);
         }
-        database.getCollection("messages").insertOne(messageAPartager);
     }
 
     //Sends the channel history from the database to the user
