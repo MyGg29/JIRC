@@ -83,8 +83,4 @@ public class Database {
     }
 
 
-    //TODO : export, peut-être avec mongoexport (mais c'est une ligne de commande)
-
-
-
 }

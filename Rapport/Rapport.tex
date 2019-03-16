@@ -4,106 +4,106 @@
 
 % Preamble
 \documentclass[11pt]{article}
-\documentclass{article}
+
 
 
 % Packages
 \usepackage{amsmath}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-
-% Titre
-\title{JMessenger - Rapport de projet Java}
-\authors{BECART Quentin - GOURMELON Gwendal}
-\date{ISEN AP4 - Mars 2019}
-
-% Document
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{here}
 \begin{document}
 
-\maketitle
+    % Titre
+    \title{JMessenger - Rapport de projet Java}
+    \author{BECART Quentin - GOURMELON Gwendal}
+    \date{ISEN AP4 - Mars 2019}
 
-\section{Introduction}
-    Nous avons au cours de cette période école et dans le cadre du module de programmation Java, été amenés à réaliser
-    un programme de messagerie instantanée.
+    % Document
 
-\section{Rappel du cahier des charges}
-\begin{itemize}
-    \item Le programme devra permettre à tous les utilisateurs d’envoyer et de recevoir des messages sur un salon ou à des utilisateurs spéciﬁqués identiﬁés (1 ou plusieurs).
-    \item Le programme devra pouvoir permettre de créer/modiﬁer des salons et d’y inviter des utilisateurs
-    \item Chaque utilisateur possèdera ou non les droits de modiﬁcation d’un salon. Droits qu’il pourra répliquer ou non aux autres utilisateurs du salon.
-    \item Le programme doit disposer d’une interface graphique claire pour la lecture de l’historique des salons, la liste des discussions en cours, les utilisateurs connectés sur chaque salon.
-    \item Le programme devra permettre, pour les administrateurs d’un salon, d’exporter l’historique de discussion d’un salon via un ﬁchier XML.
-    \item Chaque utilisateur peut, à tout moment, se désinscrire d’un salon.
-    \item La déconnexion du salon ne doit pas entraîner la perte de l’historique des conversations.
-    \item Le programme devra fournir des statistiques sur l’activité des utilisateurs et des diﬀérents salons.
-\end{itemize}
+    \maketitle
 
-\section{Structure du programme}
-\subsubsection{MVC}
+    \section{Introduction}
+    Nous avons au cours de cette période école et dans le cadre du module de programmation Java, été amenés à réaliser un programme de messagerie instantanée.\newline
+    \centerline{https://github.com/MyGg29/JIRC}
+    \section{Rappel du cahier des charges}
+    \begin{itemize}
+        \item Le programme devra permettre à tous les utilisateurs d’envoyer et de recevoir des messages sur un salon ou à des utilisateurs spéciﬁqués identiﬁés (1 ou plusieurs).
+        \item Le programme devra pouvoir permettre de créer/modiﬁer des salons et d’y inviter des utilisateurs
+        \item Chaque utilisateur possèdera ou non les droits de modiﬁcation d’un salon. Droits qu’il pourra répliquer ou non aux autres utilisateurs du salon.
+        \item Le programme doit disposer d’une interface graphique claire pour la lecture de l’historique des salons, la liste des discussions en cours, les utilisateurs connectés sur chaque salon.
+        \item Le programme devra permettre, pour les administrateurs d’un salon, d’exporter l’historique de discussion d’un salon via un ﬁchier XML.
+        \item Chaque utilisateur peut, à tout moment, se désinscrire d’un salon.
+        \item La déconnexion du salon ne doit pas entraîner la perte de l’historique des conversations.
+        \item Le programme devra fournir des statistiques sur l’activité des utilisateurs et des diﬀérents salons.
+    \end{itemize}
+
+    \section{Structure du programme}
+    \subsection{MVC}
     Dans le cadre de ce projet, nous avons utilisé l'architecture logicielle MVC (pour Modèle-Vue-Contrôleur) se présentant de la manière suivante :
-\begin{itemize}
-    \item Le Modèle contient l'ensemble des données à afficher
-    \item La Vue constitue l'interface graphique (elle est l'élément d'interaction avec l'utilisateur)
-    \item Le Contrôleur représente le lien entre la vue et le modèle et définit les actions qui seront effectuées lors d'un évènement (interaction de l'utilisateur)
-\end{itemize}
-    Le modèle est le contrôleur sont tous deux des fichiers .java, la vue est quant à elle un fichier .fxml.
+    \begin{itemize}
+        \item Le Modèle contient l'ensemble des données à afficher
+        \item La Vue constitue l'interface graphique (elle est l'élément d'interaction avec l'utilisateur)
+        \item Le Contrôleur représente le lien entre la vue et le modèle et définit les actions qui seront effectuées lors d'un évènement (interaction de l'utilisateur)
+    \end{itemize}
+    Le modèle et le contrôleur sont tous deux des fichiers .java, la vue est quant à elle un fichier .fxml.
 
-\subsubsection{Packages}
+    \subsection{Packages}
     Nous avons actuellement 4 packages :
 
-\begin{itemize}
-    \item Client : côté client
-    \item Database : partie base de données
-    \item Models : modèles, autrement dit les classes génériques d’informations utilisées
-    \item Server : côté serveur
-\end{itemize}
-
-\subsubsection{Diagramme de classes / Arborescence globale}
-    Dans cette partie, nous allons aborder la manière dont sont réparti les classes et ainsi visualiser une arborescence globale du projet.
-    Pour notre illustration, notons que l’arborescence se divise, de manière générale, de la manière suivante :
-
-\begin{itemize}
-    \item PACKAGE
-        \subitem SOUS PACKAGE (éventuel)
-            \subsubitem CLASSES
-\end{itemize}
+    \begin{itemize}
+        \item Client : côté client
+        \item Database : partie base de données
+        \item Models : modèles, autrement dit les classes génériques d’informations utilisées
+        \item Server : côté serveur
+        \item Util : partie utilitaire (fonctions génériques, ...)
+    \end{itemize}
 
 
-\begin{itemize}
-    \item Client
-        \subitem Controllers (.java)
-            \subsubitem ConnexionController
-            \subsubitem JoinChannelController
-            \subsubitem MainController
-            \subsubitem ParametresController
-            \subsubitem RegisterController
-            \subsubitem StatsController
-        \subitem CSS (.css)
-            \subsubitem common
-        \subitem Ressources
-            \subsubitem (images)
-        \subitem Views (.fxml)
-            \subsubitem ChannelParameters
-            \subsubitem Client
-            \subsubitem Connexion
-            \subsubitem JoinChannel
-            \subsubitem Stats
-            \subsubitem Register
-        Main.java
-        \subitem Database (.java)
-            \subsubitem Database
-        \subitem Models (.java)
-            \subsubitem Client
-            \subsubitem Message
-            \subsubitem TypesChannel
-            \subsubitem TypesMessage
-        \subitem Server (.java)
-            \subsubitem Channel
-            \subsubitem Server
-            \subsubitem SSocket
-            \subsubitem User
-\end{itemize}
+    \subsection{Classes importantes}
 
+    \begin{itemize}
+        \item client.Main.java : le point d'entrée du Client.
+        \item serveur.Server.java : le point d'entrée du serveur. Créer un Thread pour chaque nouvelle connexion
+        \item client.controllers.MainController.java : le contrôleur de la fenêtre principale de chat
+        \item models.Client.java : La logique client. S'occupe du transfert de données entre le client et le serveur
+        \item models.ClientListener.java : Thread d'écoute du client. Permettant de parler et d'écouter le serveur en même temps.
+        \item serveur.SSocket.java : La logique du serveur.
+    \end{itemize}
+
+
+    \subsection{Diagramme de classes et diagramme client}
+
+    Voir pages suivantes.
+    L'image du diagramme représenté est disponible en meilleure résolution sur le repository GitHub du projet.\citep{jmessengerbecartgourmelon}
+
+    \begin{figure}[!h]
+        \centering
+        \centerline{\includegraphics[scale=0.25]{Diagramme_Client.png}}
+        \caption{Diagramme de classes}
+        \label{fig:diagClasses}
+    \end{figure}
+
+    \begin{figure}[!h]
+        \centering
+        \centerline{\includegraphics[scale=0.30]{Diagramme_de_classe.png}}
+        \caption{Diagramme Client}
+        \label{fig:diagClient}
+    \end{figure}
+
+    \section{Conclusion}
+
+    Ce projet nous a permis de mettre en pratique les différents points du langage Java abordés en cours.
+    Nous nous sommes également familiarisés avec le framework FXML et le développement d'interfaces graphiques d'une manière générale. Il aura aussi été interessant de développer deux applications qui communiquent entre elles : le serveur d'un côté et le client de l'autre.
+
+
+
+    \bibliographystyle{plain}
+    \bibliography{references}
 
 \end{document}
 
