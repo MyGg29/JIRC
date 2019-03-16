@@ -64,11 +64,12 @@ public class MessagesFactory {
         d.put("Channel",channel);
         return d;
     }
-    public static Document userList(List<String> userNamelist){
+    public static Document userList(List<String> userNamelist,String userNamelistChannel){
         Document d = new Document();
         d.put("Type", "INFO");
         d.put("TypeInfo","userList");
         d.put("userNameList",userNamelist);
+        d.put("userNameListChannel",userNamelistChannel);
         return d;
     }
 

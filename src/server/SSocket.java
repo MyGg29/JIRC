@@ -144,7 +144,7 @@ public class SSocket implements Runnable {
             if(messageRecu.get("TypeInfo").equals("getUserList")){
                 String channel = messageRecu.get("Channel",String.class);
                 List<String> userNameList = Channel.everyChannels.get(channel).getUserList().stream().map(User::getName).collect(Collectors.toList());
-                Document d = MessagesFactory.userList(userNameList);
+                Document d = MessagesFactory.userList(userNameList,channel);
                 userData.send(d.toJson());
             }
         }catch (IOException e){
