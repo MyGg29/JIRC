@@ -11,6 +11,8 @@ Merci.
 
 Q. BECART & G. GOURMELON
 
+![Diagramme de classe](https://github.com/MyGg29/JIRC/blob/master/Diagramme%20Client.png)
+
 ### English
 ---
 
