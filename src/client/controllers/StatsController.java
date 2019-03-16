@@ -46,7 +46,7 @@ public class StatsController {
         historiqueMessageLineChart.getData().addAll(serieMessageEnvoye);
         serieUtilisateurConnecte = new XYChart.Series<>();
         serieUtilisateurConnecte.setName("Nombre d'utilisateur connecté en même temps");
-        historiqueMessageLineChart.getData().addAll(serieUtilisateurConnecte);
+        historiqueNbUtilisateurConnecte.getData().addAll(serieUtilisateurConnecte);
     }
 
     public void incrementNbMessagesEnvoyes(){

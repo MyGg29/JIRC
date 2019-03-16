@@ -69,7 +69,6 @@ public class MainController {
             statsStage = new Stage();
             statsStage.setTitle("Statistiques");
             statsStage.setScene(new Scene(rootStats));
-            statsController.setClient(client);
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -81,6 +80,7 @@ public class MainController {
         Platform.runLater(() -> {
             client.setShowMessage(this::showText);
             client.joinChannel(tabs.getSelectionModel().getSelectedItem().getText(), TypesChannel.PUBLIC);
+            statsController.setClient(client);
         });
 
         //Horloge
@@ -227,6 +227,7 @@ public class MainController {
      */
     @FXML
     private void showStats(ActionEvent event){
+        statsController.refreshInformations();
         statsStage.show();
     }
 
