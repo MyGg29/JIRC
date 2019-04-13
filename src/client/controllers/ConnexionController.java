@@ -28,7 +28,6 @@ public class ConnexionController {
     TextField password;
 
     Stage registerStage;
-    RegisterController registerController;
 
     Client client;
 
@@ -36,7 +35,6 @@ public class ConnexionController {
         try{
             FXMLLoader loaderRegister = new FXMLLoader(getClass().getResource("../views/Register.fxml"));//
             final Parent rootRegister= loaderRegister.load();//
-            registerController = loaderRegister.getController();
             registerStage = new Stage();
             registerStage.setTitle("Inscription");
             registerStage.setScene(new Scene(rootRegister));
