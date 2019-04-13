@@ -7,9 +7,15 @@ Ce dépôt GitHub "JIRC" concerne un projet école dont le but est de réaliser 
 
 Pour voir plus d'informations, merci de regarder dans le dossier "Rapport", ou vous trouverez des détails concernant le projet.
 
+Technologie necessaire : 
+  - Java 1.8 
+  - MongoDB 4.0 
+  
 Merci.
 
 Q. BECART & G. GOURMELON
+
+![Diagramme de classe](https://github.com/MyGg29/JIRC/blob/master/Diagramme%20Client.png)
 
 ### English
 ---
